@@ -13,4 +13,6 @@ export interface Trip {
   interests: string[]
   status: TripStatus
   created_at: string
+  ai_content: unknown | null
+  ai_generated_at: string | null
 }
