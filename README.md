@@ -1,36 +1,124 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+#  AI Travel Intelligence Platform
+
+An AI-powered travel planning platform that helps users create smarter trips through personalized itineraries, destination insights, travel recommendations, packing checklists, and AI-generated travel guidance.
+
+---
+
+## ✨ Features
+
+- AI-powered trip planning
+- Personalized itinerary generation
+- Budget-aware travel recommendations
+- Restaurant recommendations based on dietary preferences
+- Smart packing checklist
+- Weather-aware travel suggestions
+- Local safety tips and travel etiquette
+- Hidden gems and less crowded destinations
+- Printable travel plan
+- Responsive web application
+
+---
+
+## Tech Stack
+
+### Frontend
+- Next.js 16
+- React
+- TypeScript
+- Tailwind CSS
+
+### Backend
+- Supabase
+- PostgreSQL
+
+### AI
+- OpenAI API *(planned)*
+
+### Authentication
+- Supabase Auth
+
+---
+
+## Project Structure
+
+```
+src/
+├── app/
+├── components/
+├── hooks/
+├── lib/
+├── types/
+└── middleware.ts
+```
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### Clone the repository
+
+```bash
+git clone https://github.com/<your-username>/ai-travel-intel.git
+cd ai-travel-intel
+```
+
+### Install dependencies
+
+```bash
+npm install
+```
+
+### Create an environment file
+
+Create a `.env.local` file in the project root:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_publishable_key
+```
+
+### Run the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Development Status
 
-To learn more about Next.js, take a look at the following resources:
+Current progress:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Project setup
+- Supabase integration
+- Trip creation form
+- Database connectivity
+- Dashboard
+- AI itinerary generation
+- Personalized recommendations
+- Printable travel plans
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Vision
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Most travel apps focus on booking.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This platform focuses on **planning**.
+
+Instead of simply suggesting destinations, it acts as an AI travel companion by helping users:
+
+- decide where to go
+- determine whether a destination is worth visiting
+- optimize their schedule
+- discover hidden attractions
+- prepare before the journey
+- travel smarter and safer
+
+---
