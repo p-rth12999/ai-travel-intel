@@ -5,7 +5,7 @@ import { zodResponseFormat } from 'openai/helpers/zod'
 
 export async function generateTripAIContent(trip: Trip): Promise<TripAIContent> {
   const completion = await openai.chat.completions.parse({
-    model: 'gpt-4o-2024-08-06',
+    model: 'openai/gpt-4o-mini',
     messages: [
       {
         role: 'system',

@@ -6,20 +6,32 @@ import WorkspaceGrid from '@/components/workspace/WorkspaceGrid'
 import WorkspaceGridSkeleton from '@/components/workspace/WorkspaceGridSkeleton'
 import { getOrGenerateTripContent } from '@/lib/openai/get-or-generate-trip-content'
 import { tripAIContentSchema } from '@/lib/validations/trip-ai-content'
+import { Trip } from '@/types/trip'
 
-async function AIWorkspaceSection({ trip }: { trip: any }) {
+async function AIWorkspaceSection({ trip }: { trip: Trip }) {
+  let content: ReturnType<typeof tripAIContentSchema.parse> | null = null
+  let hasError = false
+
   try {
     const rawContent = await getOrGenerateTripContent(trip)
     const parsed = tripAIContentSchema.safeParse(rawContent)
 
     if (!parsed.success) {
-      return <WorkspaceGridSkeleton status="error" />
+      console.error('Zod validation failed:', parsed.error)
+      hasError = true
+    } else {
+      content = parsed.data
     }
+  } catch (err) {
+    console.error('AI content generation failed:', err)
+    hasError = true
+  }
 
-    return <WorkspaceGrid content={parsed.data} />
-  } catch {
+  if (hasError || !content) {
     return <WorkspaceGridSkeleton status="error" />
   }
+
+  return <WorkspaceGrid content={content} tripId={trip.id} />
 }
 
 export default async function TripWorkspacePage({
