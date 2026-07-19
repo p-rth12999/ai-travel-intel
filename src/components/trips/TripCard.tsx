@@ -31,7 +31,7 @@ export default function TripCard({ trip }: { trip: Trip }) {
         <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600">
           {trip.title}
         </h3>
-        <p className="mt-1 text-sm text-gray-500">{trip.destination}</p>
+        <p className="mt-1 text-sm text-gray-500">{trip.source} → {trip.destinations.join(' → ')}</p>
         <p className="mt-4 text-xs text-gray-400">
           {formatDateRange(trip.start_date, trip.end_date)}
         </p>

@@ -1,6 +1,8 @@
 import { z } from 'zod'
 
 export const tripAIContentSchema = z.object({
+  tripType: z.enum(['domestic', 'international']),
+
   overview: z.object({
     summary: z.string(),
     highlights: z.array(z.string()),
@@ -45,6 +47,14 @@ export const tripAIContentSchema = z.object({
   localWisdom: z.object({
     tips: z.array(z.string()),
   }),
+  localRegulations: z.object({
+    rules: z.array(
+      z.object({
+        rule: z.string(),
+        context: z.string(),
+      })
+    ),
+  }),
   restaurantRecommendations: z.object({
     restaurants: z.array(
       z.object({
@@ -60,6 +70,14 @@ export const tripAIContentSchema = z.object({
     averageTempRange: z.string(),
     packingNote: z.string(),
   }),
+  medicalRecommendations: z.object({
+    items: z.array(
+      z.object({
+        recommendation: z.string(),
+        reason: z.string(),
+      })
+    ),
+  }),
   smartChecklist: z.object({
     tasks: z.array(
       z.object({
@@ -68,6 +86,41 @@ export const tripAIContentSchema = z.object({
       })
     ),
   }),
+  hiddenGems: z.object({
+    spots: z.array(
+      z.object({
+        name: z.string(),
+        description: z.string(),
+        whyHiddenGem: z.string(),
+      })
+    ),
+  }),
+  emergencyInfo: z.object({
+  items: z.array(
+    z.object({
+      type: z.enum(['hospital', 'pharmacy', 'emergency_number', 'consulate']),
+      name: z.string(),
+      detail: z.string(),
+    })
+  ),
+}),
+  currencyInfo: z
+    .object({
+      exchangeRateNote: z.string(),
+      estimatedConversion: z.string(),
+      paymentSuggestions: z.array(z.string()),
+    })
+    .nullable(),
+  offlineLanguage: z
+    .object({
+      phrases: z.array(
+        z.object({
+          phrase: z.string(),
+          translation: z.string(),
+        })
+      ),
+    })
+    .nullable(),
 })
 
 export type TripAIContent = z.infer<typeof tripAIContentSchema>

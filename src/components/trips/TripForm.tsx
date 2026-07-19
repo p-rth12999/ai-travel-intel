@@ -4,9 +4,21 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { tripFormSchema, TripFormValues, TRIP_INTERESTS, CURRENCIES } from '@/lib/validations/trip'
-import { createClient } from '@/lib/supabase/client'
 import { z } from 'zod'
+import {
+  tripFormSchema,
+  TripFormValues,
+  TRIP_INTERESTS,
+  CURRENCIES,
+  TRANSPORT_MODES,
+  FOOD_PREFERENCES,
+  ACCESSIBILITY_NEEDS,
+} from '@/lib/validations/trip'
+import { createClient } from '@/lib/supabase/client'
+import DestinationsInput from '@/components/trips/DestinationsInput'
+import TagSelector from '@/components/trips/TagSelector'
+
+type TagField = 'interests' | 'foodPreferences' | 'accessibilityNeeds'
 
 export default function TripForm() {
   const router = useRouter()
@@ -23,37 +35,33 @@ export default function TripForm() {
     resolver: zodResolver(tripFormSchema),
     defaultValues: {
       title: '',
-      destination: '',
+      source: '',
+      destinations: [''],
       startDate: '',
       endDate: '',
       travelers: 1,
       budget: 0,
       currency: 'USD',
+      transportMode: 'Car',
       interests: [],
+      foodPreferences: [],
+      accessibilityNeeds: [],
     },
   })
 
-  
-  const selectedInterests = watch('interests')
-
-  function toggleInterest(interest: (typeof TRIP_INTERESTS)[number]) {
-    const current = selectedInterests || []
-    if (current.includes(interest)) {
-      setValue(
-        'interests',
-        current.filter((i) => i !== interest),
-        { shouldValidate: true }
-      )
+  function toggleTag(field: TagField, value: string) {
+    const current = (watch(field) as string[]) || []
+    if (current.includes(value)) {
+      setValue(field, current.filter((v) => v !== value) as never, { shouldValidate: true })
     } else {
-      setValue('interests', [...current, interest], { shouldValidate: true })
+      setValue(field, [...current, value] as never, { shouldValidate: true })
     }
   }
 
- const onSubmit = async (data: TripFormValues) => {
+  const onSubmit = async (data: TripFormValues) => {
     setSubmitError(null)
 
     const { data: { user } } = await supabase.auth.getUser()
-
     if (!user) {
       setSubmitError('You must be signed in to create a trip.')
       return
@@ -62,13 +70,17 @@ export default function TripForm() {
     const { error } = await supabase.from('trips').insert({
       user_id: user.id,
       title: data.title,
-      destination: data.destination,
+      source: data.source,
+      destinations: data.destinations,
       start_date: data.startDate,
       end_date: data.endDate,
       travelers: data.travelers,
       budget: data.budget,
       currency: data.currency,
+      transport_mode: data.transportMode,
       interests: data.interests,
+      food_preferences: data.foodPreferences,
+      accessibility_needs: data.accessibilityNeeds,
       status: 'planning',
     })
 
@@ -81,155 +93,130 @@ export default function TripForm() {
     router.refresh()
   }
 
-   return (
+
+  return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {submitError && (
         <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
           {submitError}
         </div>
       )}
-      {/* Title */}
+
       <div>
-        <label className="mb-1 block text-sm font-medium text-gray-700">
-          Trip title
-        </label>
+        <label className="mb-1 block text-sm font-medium text-gray-700">Trip title</label>
         <input
           {...register('title')}
           type="text"
           placeholder="e.g. Summer in Japan"
           className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
         />
-        {errors.title && (
-          <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>
-        )}
+        {errors.title && <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>}
       </div>
 
-      {/* Destination */}
       <div>
-        <label className="mb-1 block text-sm font-medium text-gray-700">
-          Destination
-        </label>
+        <label className="mb-1 block text-sm font-medium text-gray-700">Starting from</label>
         <input
-          {...register('destination')}
+          {...register('source')}
           type="text"
-          placeholder="e.g. Tokyo & Kyoto, Japan"
+          placeholder="e.g. Pune, India"
           className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
         />
-        {errors.destination && (
-          <p className="mt-1 text-sm text-red-600">{errors.destination.message}</p>
-        )}
+        {errors.source && <p className="mt-1 text-sm text-red-600">{errors.source.message}</p>}
       </div>
 
-      {/* Dates */}
+      <div>
+        <label className="mb-1 block text-sm font-medium text-gray-700">Destinations</label>
+        <DestinationsInput
+  value={watch('destinations')}
+  onChange={(destinations) => setValue('destinations', destinations)}
+  error={errors.destinations?.message}
+/>
+      </div>
+
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
-            Start date
-          </label>
+          <label className="mb-1 block text-sm font-medium text-gray-700">Start date</label>
           <input
             {...register('startDate')}
             type="date"
             className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
           />
-          {errors.startDate && (
-            <p className="mt-1 text-sm text-red-600">{errors.startDate.message}</p>
-          )}
+          {errors.startDate && <p className="mt-1 text-sm text-red-600">{errors.startDate.message}</p>}
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
-            End date
-          </label>
+          <label className="mb-1 block text-sm font-medium text-gray-700">End date</label>
           <input
             {...register('endDate')}
             type="date"
             className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
           />
-          {errors.endDate && (
-            <p className="mt-1 text-sm text-red-600">{errors.endDate.message}</p>
-          )}
+          {errors.endDate && <p className="mt-1 text-sm text-red-600">{errors.endDate.message}</p>}
         </div>
       </div>
 
-      {/* Travelers, Budget & Currency */}
-        <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-4 gap-4">
         <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-            Number of travelers
-            </label>
-            <input
+          <label className="mb-1 block text-sm font-medium text-gray-700">Travelers</label>
+          <input
             {...register('travelers')}
             type="number"
             min={1}
             className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
-            />
-            {errors.travelers && (
-            <p className="mt-1 text-sm text-red-600">{errors.travelers.message}</p>
-            )}
+          />
+          {errors.travelers && <p className="mt-1 text-sm text-red-600">{errors.travelers.message}</p>}
         </div>
-
         <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-            Budget
-            </label>
-            <input
+          <label className="mb-1 block text-sm font-medium text-gray-700">Budget</label>
+          <input
             {...register('budget')}
             type="number"
             min={0}
             className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
-            />
-            {errors.budget && (
-            <p className="mt-1 text-sm text-red-600">{errors.budget.message}</p>
-            )}
+          />
+          {errors.budget && <p className="mt-1 text-sm text-red-600">{errors.budget.message}</p>}
         </div>
-
         <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-            Currency
-            </label>
-            <select
+          <label className="mb-1 block text-sm font-medium text-gray-700">Currency</label>
+          <select
             {...register('currency')}
             className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
-            >
+          >
             {CURRENCIES.map((c) => (
-                <option key={c} value={c}>
-                {c}
-                </option>
+              <option key={c} value={c}>{c}</option>
             ))}
-            </select>
-            {errors.currency && (
-            <p className="mt-1 text-sm text-red-600">{errors.currency.message}</p>
-            )}
+          </select>
         </div>
+        <div>
+          <label className="mb-1 block text-sm font-medium text-gray-700">Transport</label>
+          <select
+            {...register('transportMode')}
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+          >
+            {TRANSPORT_MODES.map((m) => (
+              <option key={m} value={m}>{m}</option>
+            ))}
+          </select>
         </div>
-
-      {/* Interests */}
-      <div>
-        <label className="mb-2 block text-sm font-medium text-gray-700">
-          Trip type / interests
-        </label>
-        <div className="flex flex-wrap gap-2">
-          {TRIP_INTERESTS.map((interest) => {
-            const isSelected = selectedInterests?.includes(interest)
-            return (
-              <button
-                key={interest}
-                type="button"
-                onClick={() => toggleInterest(interest)}
-                className={`rounded-full border px-4 py-2 text-sm font-medium transition ${
-                  isSelected
-                    ? 'border-blue-600 bg-blue-600 text-white'
-                    : 'border-gray-300 text-gray-700 hover:border-blue-400'
-                }`}
-              >
-                {interest}
-              </button>
-            )
-          })}
-        </div>
-        {errors.interests && (
-          <p className="mt-1 text-sm text-red-600">{errors.interests.message}</p>
-        )}
       </div>
+
+      <TagSelector
+  selected={watch('interests') || []}
+  options={TRIP_INTERESTS}
+  label="Preferences (optional)"
+  onToggle={(v) => toggleTag('interests', v)}
+/>
+<TagSelector
+  selected={watch('foodPreferences') || []}
+  options={FOOD_PREFERENCES}
+  label="Food preferences (optional)"
+  onToggle={(v) => toggleTag('foodPreferences', v)}
+/>
+<TagSelector
+  selected={watch('accessibilityNeeds') || []}
+  options={ACCESSIBILITY_NEEDS}
+  label="Accessibility needs (optional)"
+  onToggle={(v) => toggleTag('accessibilityNeeds', v)}
+/>
 
       <button
         type="submit"

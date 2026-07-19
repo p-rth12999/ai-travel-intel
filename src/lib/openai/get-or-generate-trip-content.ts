@@ -2,12 +2,17 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { generateTripAIContent } from '@/lib/openai/generate-trip-content'
-import { TripAIContent } from '@/lib/validations/trip-ai-content'
+import { tripAIContentSchema, TripAIContent } from '@/lib/validations/trip-ai-content'
 import { Trip } from '@/types/trip'
 
 export async function getOrGenerateTripContent(trip: Trip): Promise<TripAIContent> {
   if (trip.ai_content) {
-    return trip.ai_content as TripAIContent
+    const cached = tripAIContentSchema.safeParse(trip.ai_content)
+    if (cached.success) {
+      return cached.data
+    }
+    // Cached content doesn't match the current schema (e.g. we added new
+    // fields since it was generated) — fall through and regenerate.
   }
 
   const content = await generateTripAIContent(trip)
