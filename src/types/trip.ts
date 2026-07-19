@@ -1,4 +1,4 @@
-export type TripStatus = 'planning' | 'upcoming' | 'completed'
+export type TripStatus = 'planning' | 'upcoming' | 'completed' | 'cancelled'
 
 export interface Trip {
   id: string
@@ -19,4 +19,6 @@ export interface Trip {
   created_at: string
   ai_content: unknown | null
   ai_generated_at: string | null
+  trip_health: unknown | null
+  live_intelligence_refreshed_at: string | null
 }

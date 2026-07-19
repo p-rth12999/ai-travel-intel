@@ -104,6 +104,34 @@ export const tripAIContentSchema = z.object({
     })
   ),
 }),
+mobilityIntelligence: z.object({
+  destinationNotes: z.array(
+    z.object({
+      destination: z.string(),
+      isCarFree: z.boolean(),
+      recommendedRoute: z.array(z.string()),
+      reasoning: z.string(),
+    })
+  ),
+  rentalVehicleAssessment: z.string().nullable(),
+}),
+
+accommodationIntelligence: z.object({
+  insights: z.array(
+    z.object({
+      destination: z.string(),
+      insight: z.string(),
+      recommendedBookingWindow: z.string(),
+    })
+  ),
+  recommendations: z.array(
+    z.object({
+      destination: z.string(),
+      primary: z.string(),
+      alternatives: z.array(z.string()),
+    })
+  ),
+}),
   currencyInfo: z
     .object({
       exchangeRateNote: z.string(),

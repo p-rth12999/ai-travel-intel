@@ -1,6 +1,7 @@
 import { Trip } from '@/types/trip'
 import PrintButton from '@/components/trips/PrintButton'
 import TripHeaderActions from '@/components/trips/TripHeaderActions'
+import TripStatusActions from '@/components/trips/TripStatusActions'
 
 export default function TripHeader({ trip }: { trip: Trip }) {
   const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', year: 'numeric' }
@@ -17,6 +18,7 @@ export default function TripHeader({ trip }: { trip: Trip }) {
         </p>
       </div>
       <div className="flex items-center gap-2 print:hidden">
+        <TripStatusActions trip={trip} />
         <TripHeaderActions trip={trip} />
         <PrintButton />
       </div>
