@@ -28,12 +28,12 @@ export default function TripHeaderActions({ trip }: { trip: Trip }) {
 
   return (
     <>
-      <button onClick={() => setIsEditing(true)} className="flex items-center gap-1 rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50">
-        <Pencil className="h-3.5 w-3.5" /> Edit
-      </button>
-      <button onClick={handleRegenerate} disabled={isRegenerating} className="flex items-center gap-1 rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-50">
-        <RefreshCw className={`h-3.5 w-3.5 ${isRegenerating ? 'animate-spin' : ''}`} /> {isRegenerating ? 'Regenerating...' : 'Regenerate plan'}
-      </button>
+      <button onClick={() => setIsEditing(true)} className="flex items-center gap-1 rounded-full border border-white/40 bg-white/15 px-3 py-1.5 text-sm text-white backdrop-blur hover:bg-white/25">
+  <Pencil className="h-3.5 w-3.5" /> Edit
+</button>
+<button onClick={handleRegenerate} disabled={isRegenerating} className="flex items-center gap-1 rounded-full border border-white/40 bg-white/15 px-3 py-1.5 text-sm text-white backdrop-blur hover:bg-white/25 disabled:opacity-50">
+  <RefreshCw className={`h-3.5 w-3.5 ${isRegenerating ? 'animate-spin' : ''}`} /> {isRegenerating ? 'Regenerating...' : 'Regenerate'}
+</button>
       <OfflineExportButton tripId={trip.id} />
       <DuplicateTripButton trip={trip} />
       {isEditing && <EditTripDialog trip={trip} onClose={() => setIsEditing(false)} />}

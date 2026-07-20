@@ -7,8 +7,13 @@ import WorldMapBackground from '@/components/landing/WorldMapBackground'
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden pb-20 pt-8">
-      <WorldMapBackground />
+    <section className="relative overflow-hidden bg-[#DEEDFC] pb-24 pt-8">
+  <div
+    className="absolute inset-0 bg-cover bg-center"
+    style={{ backgroundImage: "url('/images/world-map.png')" }}
+  />
+  <div className="absolute inset-0 bg-[#0B1832]/15" />
+  <WorldMapBackground />
       <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">
         <motion.span
           initial={{ opacity: 0, y: 10 }}
@@ -22,7 +27,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.1 }}
-          className="text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl"
+          className="text-4xl font-semibold tracking-tight text-white sm:text-5xl"
         >
           Travel smarter.<br />Travel prepared.
         </motion.h1>
@@ -30,7 +35,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
-          className="mx-auto mt-4 max-w-lg text-base text-gray-500"
+          className="mx-auto mt-4 max-w-lg text-base text-blue-100/80"
         >
           Your AI companion that plans, monitors, adapts, and protects every journey.
         </motion.p>
@@ -43,9 +48,9 @@ export default function Hero() {
           <Link href="/login" className="flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-medium text-white shadow-sm hover:bg-blue-700">
             Plan Your Trip <ArrowRight className="h-4 w-4" />
           </Link>
-          <a href="#showcase" className="flex items-center gap-2 rounded-full border border-gray-200 bg-white/70 px-6 py-3 text-sm font-medium text-gray-900 backdrop-blur hover:bg-white">
-            <Play className="h-4 w-4" /> Watch Demo
-          </a>
+         <a href="#showcase" className="flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-6 py-3 text-sm font-medium text-white backdrop-blur hover:bg-white/20">
+  <Play className="h-4 w-4" /> Watch Demo
+</a>
         </motion.div>
       </div>
     </section>

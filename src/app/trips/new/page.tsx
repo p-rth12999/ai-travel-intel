@@ -2,16 +2,20 @@ import TripForm from '@/components/trips/TripForm'
 
 export default function NewTripPage() {
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-10">
-      <div className="mx-auto max-w-2xl">
-        <h1 className="text-2xl font-semibold text-gray-900">
-          Create a New Travel Plan
-        </h1>
-        <p className="mt-1 mb-8 text-sm text-gray-500">
-          Tell us about your trip and we&apos;ll help you plan it.
-        </p>
+    <div className="relative min-h-screen overflow-hidden bg-[#0B1832] px-4 py-10">
+      <div
+        className="absolute inset-0 bg-cover bg-center opacity-20"
+        style={{ backgroundImage: "url('/images/world-map.png')" }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0B1832]/30 via-[#0B1832]/60 to-[#0B1832]" />
 
-        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+      <div className="relative z-10 mx-auto max-w-2xl">
+        <div className="mb-8 text-center">
+          <h1 className="text-2xl font-semibold text-white">Where do you want to go?</h1>
+          <p className="mt-1 text-sm text-blue-100/70">Tell us about your trip and we&apos;ll help you plan it.</p>
+        </div>
+
+        <div className="rounded-3xl border border-white/10 bg-white/95 p-6 shadow-2xl backdrop-blur">
           <TripForm />
         </div>
       </div>

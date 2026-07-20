@@ -23,30 +23,30 @@ export default function TripFilters({
   onSortChange: (s: SortOption) => void
 }) {
   return (
-    <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-      <div className="flex gap-1 rounded-lg border border-gray-200 p-1">
-        {FILTERS.map((f) => (
-          <button
-            key={f.value}
-            onClick={() => onFilterChange(f.value)}
-            className={`rounded-md px-3 py-1.5 text-sm font-medium transition ${
-              filter === f.value ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-50'
-            }`}
-          >
-            {f.label}
-          </button>
-        ))}
-      </div>
-      <select
-        value={sort}
-        onChange={(e) => onSortChange(e.target.value as SortOption)}
-        className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:border-blue-500 focus:outline-none"
+    <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white bg-white/80 p-2 shadow-sm backdrop-blur">
+  <div className="flex gap-1">
+    {FILTERS.map((f) => (
+      <button
+        key={f.value}
+        onClick={() => onFilterChange(f.value)}
+        className={`rounded-full px-3 py-1.5 text-sm font-medium transition ${
+          filter === f.value ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-50'
+        }`}
       >
-        <option value="recent">Most Recent</option>
-        <option value="oldest">Oldest</option>
-        <option value="alphabetical">Alphabetical</option>
-        <option value="rated">Best Rated</option>
-      </select>
-    </div>
+        {f.label}
+      </button>
+    ))}
+  </div>
+  <select
+    value={sort}
+    onChange={(e) => onSortChange(e.target.value as SortOption)}
+    className="rounded-full border border-gray-200 bg-white px-3 py-1.5 text-sm focus:border-blue-400 focus:outline-none"
+  >
+    <option value="recent">Most Recent</option>
+    <option value="oldest">Oldest</option>
+    <option value="alphabetical">Alphabetical</option>
+    <option value="rated">Best Rated</option>
+  </select>
+</div>
   )
 }

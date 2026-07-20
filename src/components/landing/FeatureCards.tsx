@@ -24,7 +24,7 @@ export default function FeatureCards() {
             viewport={{ once: true, margin: '-60px' }}
             transition={{ duration: 0.5, delay: i * 0.08 }}
             whileHover={{ y: -4 }}
-            className="rounded-3xl border border-gray-200 bg-white/70 p-6 shadow-sm backdrop-blur transition-shadow hover:shadow-md"
+            className="rounded-3xl border border-white bg-white/90 p-6 shadow-sm backdrop-blur transition-shadow hover:shadow-md"
           >
             <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-blue-50">
               <f.icon className="h-5 w-5 text-blue-600" />

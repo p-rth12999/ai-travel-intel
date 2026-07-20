@@ -10,11 +10,13 @@ export default function TimelineCard({ data }: { data: TripAIContent['timeline']
 
   return (
     <WorkspaceCard title="Timeline" icon={CalendarDays} status="ready">
-      <div className="space-y-4">
+      <div className="relative space-y-6 pl-4">
+        <div className="absolute bottom-2 left-1.5 top-2 w-px bg-gray-200" />
         {data.days.map((day) => (
-          <div key={day.day}>
-            <p className="text-sm font-medium text-gray-900">Day {day.day}: {day.title}</p>
-            <ul className="mt-1 space-y-1">
+          <div key={day.day} className="relative">
+            <div className="absolute -left-[15px] top-0.5 h-3 w-3 rounded-full border-2 border-white bg-blue-500 shadow" />
+            <p className="text-sm font-semibold text-gray-900">Day {day.day}: {day.title}</p>
+            <ul className="mt-1.5 space-y-1">
               {day.activities.map((activity, i) => {
                 const isDone = completedActivities.includes(activity)
                 return (

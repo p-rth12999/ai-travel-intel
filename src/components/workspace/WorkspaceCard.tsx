@@ -1,5 +1,6 @@
 import { ReactNode } from 'react'
 import { LucideIcon } from 'lucide-react'
+import { getAccentColor } from '@/lib/theme-colors'
 
 interface WorkspaceCardProps {
   title: string
@@ -18,10 +19,14 @@ export default function WorkspaceCard({
   emptyMessage = 'Nothing to show yet.',
   children,
 }: WorkspaceCardProps) {
+  const accent = getAccentColor(title)
+
   return (
-    <div className="flex flex-col rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+    <div className="flex flex-col rounded-3xl border border-white bg-white/85 p-5 shadow-sm backdrop-blur transition hover:-translate-y-0.5 hover:shadow-md">
       <div className="mb-4 flex items-center gap-2">
-        <Icon className="h-5 w-5 text-gray-500" />
+        <div className={`flex h-8 w-8 items-center justify-center rounded-full ${accent.bg}`}>
+          <Icon className={`h-4 w-4 ${accent.text}`} />
+        </div>
         <h3 className="text-sm font-semibold text-gray-900">{title}</h3>
       </div>
 
@@ -32,15 +37,8 @@ export default function WorkspaceCard({
           <div className="h-3 w-2/3 rounded bg-gray-200" />
         </div>
       )}
-
-      {status === 'error' && (
-        <p className="text-sm text-red-600">{errorMessage}</p>
-      )}
-
-      {status === 'empty' && (
-        <p className="text-sm text-gray-400">{emptyMessage}</p>
-      )}
-
+      {status === 'error' && <p className="text-sm text-red-600">{errorMessage}</p>}
+      {status === 'empty' && <p className="text-sm text-gray-400">{emptyMessage}</p>}
       {status === 'ready' && children}
     </div>
   )

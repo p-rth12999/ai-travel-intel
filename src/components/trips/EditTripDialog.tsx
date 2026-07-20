@@ -66,8 +66,8 @@ export default function EditTripDialog({ trip, onClose }: { trip: Trip; onClose:
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="flex max-h-[85vh] w-full max-w-xl flex-col rounded-xl bg-white p-6 shadow-lg">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4 backdrop-blur-sm">
+  <div className="flex max-h-[85vh] w-full max-w-xl flex-col rounded-3xl border border-white/40 bg-white/80 p-6 shadow-2xl backdrop-blur-xl">
         <div className="mb-4 flex items-center justify-between">
           <h3 className="text-lg font-semibold text-gray-900">Edit trip details</h3>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600">

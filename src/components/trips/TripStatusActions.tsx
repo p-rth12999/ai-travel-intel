@@ -22,12 +22,12 @@ export default function TripStatusActions({ trip }: { trip: Trip }) {
 
   return (
     <>
-      <button onClick={() => setShowRating(true)} className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50">
-        Mark Completed
-      </button>
-      <button onClick={handleCancel} className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-red-600 hover:bg-red-50">
-        Cancel Trip
-      </button>
+     <button onClick={() => setShowRating(true)} className="rounded-full border border-white/40 bg-white/15 px-3 py-1.5 text-sm text-white backdrop-blur hover:bg-white/25">
+  Mark Completed
+</button>
+<button onClick={handleCancel} className="rounded-full border border-red-300/50 bg-red-500/20 px-3 py-1.5 text-sm text-white backdrop-blur hover:bg-red-500/30">
+  Cancel Trip
+</button>
       {showRating && (
         <RatingDialog tripId={trip.id} onClose={() => setShowRating(false)} onSubmitted={() => { setShowRating(false); router.refresh() }} />
       )}

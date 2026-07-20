@@ -1,32 +1,60 @@
-import { HeartPulse } from 'lucide-react'
 import { TripHealth } from '@/lib/validations/trip-live-intelligence'
 
-const LEVEL_STYLES = {
-  green: { dot: 'bg-green-500', text: 'text-green-700', bg: 'bg-green-50' },
-  yellow: { dot: 'bg-amber-500', text: 'text-amber-700', bg: 'bg-amber-50' },
-  red: { dot: 'bg-red-500', text: 'text-red-700', bg: 'bg-red-50' },
-}
+const LEVEL_COLORS = { green: '#22c55e', yellow: '#f59e0b', red: '#ef4444' }
 
-export default function TripHealthCard({ health }: { health: TripHealth }) {
-  const style = LEVEL_STYLES[health.level]
+export default function TripHealthCard({
+  health,
+  lastUpdated,
+  floating = false,
+}: {
+  health: TripHealth
+  lastUpdated?: string | null
+  floating?: boolean
+}) {
+  const color = LEVEL_COLORS[health.level]
+  const circumference = 2 * Math.PI * 52
+  const offset = circumference - (health.score / 100) * circumference
+
   return (
-    <div className={`rounded-xl border border-gray-200 p-5 ${style.bg}`}>
-      <div className="flex items-center gap-2">
-        <HeartPulse className="h-5 w-5 text-gray-500" />
-        <h3 className="text-sm font-semibold text-gray-900">Trip Health</h3>
+    <div
+      className={
+        floating
+          ? 'rounded-3xl border border-white/40 bg-white/30 p-5 shadow-xl backdrop-blur-xl'
+          : 'mb-6 rounded-3xl border border-white bg-white/85 p-6 shadow-sm backdrop-blur'
+      }
+    >
+      <div className="flex flex-col items-center gap-5 sm:flex-row">
+        <div className="relative h-24 w-24 shrink-0 sm:h-28 sm:w-28">
+          <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90">
+            <circle cx="60" cy="60" r="52" fill="none" stroke={floating ? 'rgba(255,255,255,0.35)' : '#e5e7eb'} strokeWidth="10" />
+            <circle
+              cx="60" cy="60" r="52" fill="none" stroke={color} strokeWidth="10" strokeLinecap="round"
+              strokeDasharray={circumference} strokeDashoffset={offset}
+              style={{ transition: 'stroke-dashoffset 1s ease-out' }}
+            />
+          </svg>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className={`text-xl font-bold sm:text-2xl ${floating ? 'text-white' : 'text-gray-900'}`}>{health.score}%</span>
+          </div>
+        </div>
+
+        <div className="flex-1">
+          <div className="flex items-center justify-between">
+            <h3 className={`text-sm font-semibold ${floating ? 'text-white' : 'text-gray-900'}`}>Trip Health</h3>
+            {lastUpdated && (
+              <span className={`text-xs ${floating ? 'text-white/70' : 'text-gray-400'}`}>
+                Updated {new Date(lastUpdated).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              </span>
+            )}
+          </div>
+          <p className={`mt-1 text-sm ${floating ? 'text-white/90' : 'text-gray-600'}`}>{health.summary}</p>
+          <ul className="mt-2 space-y-1">
+            {health.factors.map((f, i) => (
+              <li key={i} className={`text-xs ${floating ? 'text-white/75' : 'text-gray-500'}`}>• {f}</li>
+            ))}
+          </ul>
+        </div>
       </div>
-      <div className="mt-2 flex items-center gap-2">
-        <span className={`h-2.5 w-2.5 rounded-full ${style.dot}`} />
-        <span className={`text-2xl font-bold ${style.text}`}>{health.score}%</span>
-      </div>
-      <p className="mt-2 text-sm text-gray-600">{health.summary}</p>
-      {health.factors.length > 0 && (
-        <ul className="mt-2 space-y-1">
-          {health.factors.map((f, i) => (
-            <li key={i} className="text-xs text-gray-500">• {f}</li>
-          ))}
-        </ul>
-      )}
     </div>
   )
 }

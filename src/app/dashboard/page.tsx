@@ -47,7 +47,7 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-[#DEEDFC]">
       <Sidebar />
       <div className="flex-1 p-6 lg:p-8">
         <DashboardHeaderWrapper

@@ -71,8 +71,8 @@ export default function AIChatCard({ tripId }: { tripId: string }) {
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="flex max-h-[80vh] w-full max-w-2xl flex-col rounded-xl bg-white p-6 shadow-lg">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4 backdrop-blur-sm">
+  <div className="flex max-h-[80vh] w-full max-w-2xl flex-col rounded-3xl border border-white/40 bg-white/80 p-6 shadow-2xl backdrop-blur-xl">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="text-lg font-semibold text-gray-900">AI Chat</h3>
               <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-gray-600"><X className="h-5 w-5" /></button>
@@ -97,9 +97,13 @@ export default function AIChatCard({ tripId }: { tripId: string }) {
                 disabled={isStreaming}
                 className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none disabled:bg-gray-50"
               />
-              <button onClick={sendMessage} disabled={isStreaming || !input.trim()} className="rounded-lg bg-blue-600 px-3 py-2 text-white hover:bg-blue-700 disabled:opacity-50">
-                <Send className="h-4 w-4" />
-              </button>
+              <button
+  onClick={() => setIsOpen(true)}
+  className="fixed bottom-6 right-6 z-40 flex items-center gap-2 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 px-5 py-3.5 text-white shadow-2xl transition hover:scale-105 print:hidden"
+>
+  <MessageCircle className="h-5 w-5" />
+  <span className="text-sm font-medium">Ask AI</span>
+</button>
             </div>
           </div>
         </div>

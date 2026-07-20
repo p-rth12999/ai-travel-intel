@@ -1,7 +1,8 @@
 import { Suspense } from 'react'
 import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
-import TripHeader from '@/components/trips/TripHeader'
+import TripHeroHeader from '@/components/trips/TripHeroHeader'
+// remove: import TripHeader from '@/components/trips/TripHeader'
 import WorkspaceGrid from '@/components/workspace/WorkspaceGrid'
 import WorkspaceGridSkeleton from '@/components/workspace/WorkspaceGridSkeleton'
 import TripHealthCard from '@/components/workspace/cards/TripHealthCard'
@@ -70,22 +71,21 @@ if (finalTrip.trip_health && !healthParsed?.success) {
     .limit(1)
     .single()
 
-  return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <CompletionProvider>
-        <TripHeader trip={finalTrip} />
-        {latestUpdate && (
-          <TripUpdateBanner summary={latestUpdate.summary} affectedCards={latestUpdate.affected_cards} />
-        )}
-        {healthParsed?.success && (
-          <div className="mb-6">
-            <TripHealthCard health={healthParsed.data} />
-          </div>
-        )}
-        <Suspense fallback={<WorkspaceGridSkeleton status="loading" />}>
-          <AIWorkspaceSection trip={finalTrip} />
-        </Suspense>
-      </CompletionProvider>
+
+    return (
+  <div className="min-h-screen bg-[#DEEDFC]">
+    <TripHeroHeader
+      trip={finalTrip}
+      health={healthParsed?.success ? healthParsed.data : null}
+      updateSummary={latestUpdate?.summary}
+      updateAffectedCards={latestUpdate?.affected_cards}
+    />
+    <div className="p-8 pt-0">
+      <Suspense fallback={<WorkspaceGridSkeleton status="loading" />}>
+        <AIWorkspaceSection trip={finalTrip} />
+      </Suspense>
     </div>
-  )
+  </div>
+)
+
 }
