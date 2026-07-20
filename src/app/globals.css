@@ -28,3 +28,18 @@ input::placeholder,
 textarea::placeholder {
   color: #9ca3af; /* Tailwind's gray-400 — clearly visible, still reads as "placeholder" not real input */
 }
+
+body {
+  color: #111827;
+}
+
+input,
+textarea,
+select {
+  color: #111827;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #9ca3af;
+}

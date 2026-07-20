@@ -2,17 +2,15 @@ import { Suspense } from 'react'
 import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
 import TripHeroHeader from '@/components/trips/TripHeroHeader'
-// remove: import TripHeader from '@/components/trips/TripHeader'
 import WorkspaceGrid from '@/components/workspace/WorkspaceGrid'
 import WorkspaceGridSkeleton from '@/components/workspace/WorkspaceGridSkeleton'
-import TripHealthCard from '@/components/workspace/cards/TripHealthCard'
-import TripUpdateBanner from '@/components/trips/TripUpdateBanner'
 import { CompletionProvider } from '@/components/workspace/CompletionContext'
 import { getOrGenerateTripContent } from '@/lib/openai/get-or-generate-trip-content'
 import { refreshLiveIntelligenceIfNeeded } from '@/lib/openai/refresh-live-intelligence'
 import { tripAIContentSchema } from '@/lib/validations/trip-ai-content'
 import { tripHealthSchema } from '@/lib/validations/trip-live-intelligence'
 import { Trip } from '@/types/trip'
+import Sidebar from '@/components/dashboard/Sidebar'
 
 async function AIWorkspaceSection({ trip }: { trip: Trip }) {
   let content: ReturnType<typeof tripAIContentSchema.parse> | null = null
@@ -59,9 +57,9 @@ export default async function TripWorkspacePage({
   const finalTrip = (trip ?? initialTrip) as Trip
 
   const healthParsed = finalTrip.trip_health ? tripHealthSchema.safeParse(finalTrip.trip_health) : null
-if (finalTrip.trip_health && !healthParsed?.success) {
-  console.error('Trip health validation failed:', healthParsed?.error)
-}
+  if (finalTrip.trip_health && !healthParsed?.success) {
+    console.error('Trip health validation failed:', healthParsed?.error)
+  }
 
   const { data: latestUpdate } = await supabase
     .from('trip_update_log')
@@ -71,21 +69,25 @@ if (finalTrip.trip_health && !healthParsed?.success) {
     .limit(1)
     .single()
 
-
-    return (
-  <div className="min-h-screen bg-[#DEEDFC]">
-    <TripHeroHeader
-      trip={finalTrip}
-      health={healthParsed?.success ? healthParsed.data : null}
-      updateSummary={latestUpdate?.summary}
-      updateAffectedCards={latestUpdate?.affected_cards}
-    />
-    <div className="p-8 pt-0">
-      <Suspense fallback={<WorkspaceGridSkeleton status="loading" />}>
-        <AIWorkspaceSection trip={finalTrip} />
-      </Suspense>
+  return (
+  <div className="flex min-h-screen bg-[#DEEDFC]">
+    <Sidebar />
+    <div className="flex-1">
+      <CompletionProvider>
+        <TripHeroHeader
+          trip={finalTrip}
+          health={healthParsed?.success ? healthParsed.data : null}
+          updateSummary={latestUpdate?.summary}
+          updateAffectedCards={latestUpdate?.affected_cards}
+        />
+        <div className="p-8 pt-0">
+          <Suspense fallback={<WorkspaceGridSkeleton status="loading" />}>
+            <AIWorkspaceSection trip={finalTrip} />
+          </Suspense>
+        </div>
+      </CompletionProvider>
     </div>
   </div>
 )
-
 }
+

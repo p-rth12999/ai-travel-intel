@@ -22,10 +22,10 @@ export default function TripStatusActions({ trip }: { trip: Trip }) {
 
   return (
     <>
-     <button onClick={() => setShowRating(true)} className="rounded-full border border-white/40 bg-white/15 px-3 py-1.5 text-sm text-white backdrop-blur hover:bg-white/25">
+     <button onClick={() => setShowRating(true)} className="rounded-full border border-white/25 bg-black/40 px-3 py-1.5 text-sm text-white shadow-md backdrop-blur-md hover:bg-black/55">
   Mark Completed
 </button>
-<button onClick={handleCancel} className="rounded-full border border-red-300/50 bg-red-500/20 px-3 py-1.5 text-sm text-white backdrop-blur hover:bg-red-500/30">
+<button onClick={handleCancel} className="rounded-full border border-red-300/40 bg-red-600/50 px-3 py-1.5 text-sm text-white shadow-md backdrop-blur-md hover:bg-red-600/65">
   Cancel Trip
 </button>
       {showRating && (

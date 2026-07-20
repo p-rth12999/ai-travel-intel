@@ -2,7 +2,7 @@ import { Link2, Mail } from 'lucide-react'
 
 export default function Footer() {
   return (
-    <footer className="bg-[#0B1832] px-6 py-10 text-center text-blue-100/70">
+    <footer className="bg-gradient-to-b from-transparent to-black/50 px-6 py-14 text-center text-white backdrop-blur-sm">
       <p className="text-sm">© 2026 Vora.</p>
       <p className="mt-1 text-sm">Designed and developed by Parth Kulkarni.</p>
       <p className="mt-1 text-xs text-blue-100/50">Built with Next.js • Supabase • OpenRouter • TypeScript</p>

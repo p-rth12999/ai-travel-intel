@@ -16,16 +16,26 @@ const STATUS_STYLES = {
 }
 const STATUS_LABELS = { planning: 'Planning', upcoming: 'Upcoming', completed: 'Completed', cancelled: 'Cancelled' }
 
-export default function TripHeroHeader({ trip, health, updateSummary, updateAffectedCards }: { ... }) {
+export default function TripHeroHeader({
+  trip,
+  health,
+  updateSummary,
+  updateAffectedCards,
+}: {
+  trip: Trip
+  health: TripHealth | null
+  updateSummary?: string
+  updateAffectedCards?: string[]
+}) {
   const status = computeDisplayStatus(trip)
   const hero = getTripHeroImage(trip.id, 1920, 700)
   const hasOverlayContent = health || updateSummary
 
   return (
-    <div className={hasOverlayContent ? 'mb-20 sm:mb-16' : 'mb-6'}>
+    <div className="mb-6">
       <div className="relative overflow-hidden shadow-sm print:hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={hero} alt={trip.destinations[0]} className="h-72 w-full object-cover sm:h-[420px]" />
+        <img src={hero} alt={trip.destinations[0]} className="h-72 w-full object-cover sm:h-96" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/10 to-black/70" />
 
         <span className={`absolute left-6 top-5 rounded-full px-3 py-1 text-xs font-medium text-white backdrop-blur ${STATUS_STYLES[status]}`}>
@@ -38,7 +48,7 @@ export default function TripHeroHeader({ trip, health, updateSummary, updateAffe
           <PrintButton />
         </div>
 
-        <div className="absolute left-6 right-6 top-16 text-white sm:left-8 sm:top-20">
+        <div className="absolute left-6 right-6 bottom-6 text-white sm:left-8">
           <h1 className="text-2xl font-semibold drop-shadow sm:text-4xl">{trip.title}</h1>
           <p className="mt-1 text-sm text-white/85 drop-shadow sm:text-base">{trip.source} → {trip.destinations.join(' → ')}</p>
           <p className="mt-1 text-xs text-white/70 drop-shadow sm:text-sm">
@@ -48,7 +58,7 @@ export default function TripHeroHeader({ trip, health, updateSummary, updateAffe
       </div>
 
       {hasOverlayContent && (
-        <div className="relative z-10 mx-4 -mt-14 sm:mx-8 sm:-mt-10">
+        <div className="mx-4 mt-4 sm:mx-8">
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
             {health && (
               <div className="lg:col-span-2">

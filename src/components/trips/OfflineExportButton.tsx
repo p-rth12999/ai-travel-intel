@@ -43,7 +43,7 @@ export default function OfflineExportButton({ tripId }: { tripId: string }) {
     <button
       onClick={handleExport}
       disabled={loading}
-      className="flex items-center gap-1 rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-50 print:hidden"
+      className="flex items-center gap-1 rounded-full border border-white/25 bg-black/40 px-3 py-1.5 text-sm text-white shadow-md backdrop-blur-md hover:bg-black/55 disabled:opacity-50 print:hidden"
     >
       <HardDriveDownload className="h-3.5 w-3.5" />
       {loading ? 'Preparing...' : 'Download Offline'}

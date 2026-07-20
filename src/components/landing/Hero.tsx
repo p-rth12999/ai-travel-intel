@@ -7,12 +7,12 @@ import WorldMapBackground from '@/components/landing/WorldMapBackground'
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-[#DEEDFC] pb-24 pt-8">
+    <section className="relative overflow-hidden bg-[#0B1832] pb-0 pt-8">
   <div
-    className="absolute inset-0 bg-cover bg-center"
-    style={{ backgroundImage: "url('/images/world-map.png')" }}
+    className="absolute inset-0 bg-cover bg-top"
+    style={{ backgroundImage: "url('/images/world-map-tall.png')", minHeight: '160vh' }}
   />
-  <div className="absolute inset-0 bg-[#0B1832]/15" />
+  <div className="absolute inset-0 bg-[#0B1832]/10" />
   <WorldMapBackground />
       <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">
         <motion.span

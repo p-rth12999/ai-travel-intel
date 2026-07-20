@@ -5,6 +5,7 @@ import DashboardHeaderWrapper from '@/components/dashboard/DashboardHeaderWrappe
 import { computeDashboardStats } from '@/lib/dashboard-stats'
 import { Trip } from '@/types/trip'
 
+
 export default async function DashboardPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()

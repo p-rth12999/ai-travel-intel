@@ -31,8 +31,10 @@ export default function Sidebar() {
   return (
     <aside className="hidden w-60 shrink-0 flex-col bg-[#0B1832] p-5 lg:flex">
       <div className="mb-8 px-1">
-        <Logo height={26} />
-      </div>
+  <Link href="/">
+    <Logo height={26} />
+  </Link>
+</div>
       <nav className="flex-1 space-y-1">
         {ITEMS.map((item) => {
           const isActive = item.href === pathname

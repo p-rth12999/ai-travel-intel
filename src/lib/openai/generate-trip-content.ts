@@ -36,7 +36,12 @@ Accessibility needs: ${trip.accessibility_needs.join(', ') || 'None specified'}$
 This is ONE continuous multi-leg journey, not separate trips. Keep origin-dependent context (visa status, embassy references, home currency) fixed throughout regardless of which leg is being discussed.
 First, determine tripType: "domestic" if every stop is in the same country as ${trip.source}, "international" otherwise.
 Restaurant recommendations must strictly respect food preferences. Timeline, activities, and medical recommendations must account for accessibility needs.
-For currencyInfo and offlineLanguage: only populate if tripType is "international", otherwise return null for both.`,
+For currencyInfo and offlineLanguage: only populate if tripType is "international", otherwise return null for both.
+For mobilityIntelligence: for each destination in the journey, determine if it's car-free or has driving restrictions (like Zermatt, Venice, Matheran-style towns) and explain the recommended way to get around. If transport mode is "${trip.transport_mode}" and it's "Car", assess whether a rental car remains practical for the whole journey or if any destination requires switching to local transport (set rentalVehicleAssessment accordingly; otherwise set it to null).
+
+For accommodationIntelligence: for each destination, note anything affecting accommodation demand (season, festivals, holidays) and a recommended booking window, plus a primary recommendation with 2-3 backup alternatives per destination.
+
+Be clear that mobility and accommodation guidance is reasoned advice based on general knowledge, not verified real-time transit schedules or live hotel availability — the user should confirm specifics directly before relying on them.`,
       },
     ],
     response_format: zodResponseFormat(tripAIContentSchema, 'trip_ai_content'),

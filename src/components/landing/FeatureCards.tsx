@@ -14,7 +14,7 @@ const FEATURES = [
 
 export default function FeatureCards() {
   return (
-    <section className="mx-auto max-w-6xl px-6 py-16">
+    <section className="relative mx-auto max-w-6xl px-6 py-16">
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {FEATURES.map((f, i) => (
           <motion.div
