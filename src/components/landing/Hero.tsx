@@ -3,23 +3,16 @@
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { ArrowRight, Play } from 'lucide-react'
-import WorldMapBackground from '@/components/landing/WorldMapBackground'
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-[#0B1832] pb-0 pt-8">
-  <div
-    className="absolute inset-0 bg-cover bg-top"
-    style={{ backgroundImage: "url('/images/world-map-tall.png')", minHeight: '160vh' }}
-  />
-  <div className="absolute inset-0 bg-[#0B1832]/10" />
-  <WorldMapBackground />
-      <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">
+    <section className="relative px-6 pb-16 pt-10">
+      <div className="mx-auto max-w-3xl text-center">
         <motion.span
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="mb-4 inline-block rounded-full border border-blue-200 bg-blue-50/80 px-4 py-1.5 text-xs font-medium text-blue-700 backdrop-blur"
+          className="mb-4 inline-block rounded-full border border-blue-200 bg-white/70 px-4 py-1.5 text-xs font-medium text-blue-700 backdrop-blur"
         >
           AI Travel Intelligence Platform
         </motion.span>
@@ -27,7 +20,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.1 }}
-          className="text-4xl font-semibold tracking-tight text-white sm:text-5xl"
+          className="text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl"
         >
           Travel smarter.<br />Travel prepared.
         </motion.h1>
@@ -35,7 +28,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
-          className="mx-auto mt-4 max-w-lg text-base text-blue-100/80"
+          className="mx-auto mt-4 max-w-lg text-base text-gray-700"
         >
           Your AI companion that plans, monitors, adapts, and protects every journey.
         </motion.p>
@@ -48,9 +41,9 @@ export default function Hero() {
           <Link href="/login" className="flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-medium text-white shadow-sm hover:bg-blue-700">
             Plan Your Trip <ArrowRight className="h-4 w-4" />
           </Link>
-         <a href="#showcase" className="flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-6 py-3 text-sm font-medium text-white backdrop-blur hover:bg-white/20">
-  <Play className="h-4 w-4" /> Watch Demo
-</a>
+          <a href="#showcase" className="flex items-center gap-2 rounded-full border border-gray-300 bg-white/70 px-6 py-3 text-sm font-medium text-gray-900 backdrop-blur hover:bg-white">
+            <Play className="h-4 w-4" /> Watch Demo
+          </a>
         </motion.div>
       </div>
     </section>
