@@ -23,8 +23,11 @@ export default function JourneyCard({
   destinationMeta: DestinationMeta[] | null
 }) {
   if (!journeyPlan.legs.length) {
-    return <WorkspaceCard title="Journey" icon={Route} status="empty" emptyMessage="No route data available yet." />
-  }
+return (
+     <WorkspaceCard title="Journey" icon={Route} status="empty" emptyMessage="No route data available yet.">
+       <></>
+     </WorkspaceCard>
+   )  }
 
   const nodes = [journeyPlan.legs[0].from, ...journeyPlan.legs.map((l) => l.to)]
   const notedLegs = journeyPlan.legs.filter((l) => l.note)
