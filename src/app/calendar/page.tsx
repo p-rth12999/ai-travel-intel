@@ -16,7 +16,7 @@ export default async function CalendarPage() {
     .not('end_date', 'is', null)
 
   return (
-    <div className="flex min-h-screen bg-[#DEEDFC]">
+    <div className="flex flex-col min-h-screen bg-[#DEEDFC] lg:flex-row">
       <Sidebar />
       <div className="flex-1 p-6 lg:p-8">
         <h1 className="mb-6 text-xl font-semibold text-gray-900">Trip Calendar</h1>

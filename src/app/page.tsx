@@ -15,7 +15,7 @@ export default function LandingPage() {
         <img
           src="/images/world-map-tall.png"
           alt="World Map Background"
-          className="h-full w-full max-w-7xl object-cover object-top opacity-90 sm:object-fill"
+          className="h-full w-full max-w-7xl object-cover object-top opacity-90"
         />
       </div>
       {/* Page Content Layer */}

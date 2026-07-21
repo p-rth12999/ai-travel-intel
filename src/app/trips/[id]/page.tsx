@@ -70,7 +70,7 @@ export default async function TripWorkspacePage({
     .single()
 
   return (
-  <div className="flex min-h-screen bg-[#DEEDFC]">
+  <div className="flex flex-col min-h-screen bg-[#DEEDFC] lg:flex-row">
     <Sidebar />
     <div className="flex-1">
       <CompletionProvider>

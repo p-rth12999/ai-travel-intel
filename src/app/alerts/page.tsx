@@ -26,7 +26,7 @@ export default async function AlertsPage() {
     .sort((a, b) => a.days - b.days)
 
   return (
-    <div className="flex min-h-screen bg-[#DEEDFC]">
+    <div className="flex flex-col min-h-screen bg-[#DEEDFC] lg:flex-row">
       <Sidebar />
       <div className="flex-1 p-6 lg:p-8">
         <h1 className="mb-6 text-xl font-semibold text-gray-900">Alerts</h1>

@@ -9,8 +9,9 @@ export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [username, setUsername] = useState('')
-  const [isSignUp, setIsSignUp] = useState(false)
+  const [mode, setMode] = useState<'signin' | 'signup' | 'forgot'>('signin')
   const [error, setError] = useState<string | null>(null)
+  const [message, setMessage] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
   const router = useRouter()
@@ -19,15 +20,26 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
+    setMessage(null)
     setLoading(true)
 
-    const { error } = isSignUp
-      ? await supabase.auth.signUp({
-          email,
-          password,
-          options: { data: { username } },
-        })
-      : await supabase.auth.signInWithPassword({ email, password })
+    if (mode === 'forgot') {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/callback?next=/reset-password`,
+      })
+      setLoading(false)
+      if (error) {
+        setError(error.message)
+        return
+      }
+      setMessage('Check your email for a password reset link.')
+      return
+    }
+
+    const { error } =
+      mode === 'signup'
+        ? await supabase.auth.signUp({ email, password, options: { data: { username } } })
+        : await supabase.auth.signInWithPassword({ email, password })
 
     setLoading(false)
 
@@ -53,21 +65,27 @@ export default function LoginPage() {
           <Logo height={32} />
           <h1 className="mt-3 text-xl font-semibold text-gray-900">Welcome to Voya</h1>
           <p className="mt-1 text-sm text-gray-500">
-            {isSignUp ? 'Create your account to start planning' : 'Sign in to continue your adventures'}
+            {mode === 'signup'
+              ? 'Create your account to start planning'
+              : mode === 'forgot'
+              ? 'Enter your email to reset your password'
+              : 'Sign in to continue your adventures'}
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Username</label>
-            <input
-              type="text"
-              required={isSignUp}
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
-            />
-          </div>
+          {mode !== 'forgot' && (
+            <div>
+              <label className="mb-1 block text-sm font-medium text-gray-700">Username</label>
+              <input
+                type="text"
+                required={mode === 'signup'}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+              />
+            </div>
+          )}
 
           <div>
             <label className="mb-1 block text-sm font-medium text-gray-700">Email</label>
@@ -80,34 +98,55 @@ export default function LoginPage() {
             />
           </div>
 
-          <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Password</label>
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
-            />
-          </div>
+          {mode !== 'forgot' && (
+            <div>
+              <label className="mb-1 block text-sm font-medium text-gray-700">Password</label>
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+              />
+            </div>
+          )}
+
+          {mode === 'signin' && (
+            <button
+              type="button"
+              onClick={() => { setMode('forgot'); setError(null); setMessage(null) }}
+              className="text-sm text-blue-600 hover:underline"
+            >
+              Forgot password?
+            </button>
+          )}
 
           {error && <p className="text-sm text-red-600">{error}</p>}
+          {message && <p className="text-sm text-green-600">{message}</p>}
 
           <button
             type="submit"
             disabled={loading}
             className="w-full rounded-full bg-blue-600 py-2.5 font-medium text-white transition hover:bg-blue-700 disabled:opacity-50"
           >
-            {loading ? 'Please wait...' : isSignUp ? 'Sign up' : 'Sign In'}
+            {loading ? 'Please wait...' : mode === 'signup' ? 'Sign up' : mode === 'forgot' ? 'Send reset link' : 'Sign In'}
           </button>
         </form>
 
         <button
-          onClick={() => setIsSignUp(!isSignUp)}
+          onClick={() => { setMode(mode === 'signup' ? 'signin' : 'signup'); setError(null); setMessage(null) }}
           className="mt-4 w-full text-center text-sm text-blue-600 hover:underline"
         >
-          {isSignUp ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
+          {mode === 'signup' ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
         </button>
+        {mode === 'forgot' && (
+          <button
+            onClick={() => { setMode('signin'); setError(null); setMessage(null) }}
+            className="mt-2 w-full text-center text-sm text-gray-500 hover:underline"
+          >
+            Back to sign in
+          </button>
+        )}
       </div>
     </div>
   )

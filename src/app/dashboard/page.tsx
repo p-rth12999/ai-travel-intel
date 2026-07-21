@@ -52,7 +52,7 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-[#DEEDFC]">
+    <div className="flex flex-col min-h-screen bg-[#DEEDFC] lg:flex-row">
       <Sidebar />
       <div className="flex-1 p-6 lg:p-8">
         <DashboardHeaderWrapper
