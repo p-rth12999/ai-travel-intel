@@ -29,11 +29,14 @@ export async function middleware(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
 
   // Protect the dashboard and trips routes: redirect to /login if not signed in
-  if (
-    !user &&
-    (request.nextUrl.pathname.startsWith('/dashboard') ||
-      request.nextUrl.pathname.startsWith('/trips'))
-  ) {
+ if (
+  !user &&
+  (request.nextUrl.pathname.startsWith('/dashboard') ||
+    request.nextUrl.pathname.startsWith('/trips') ||
+    request.nextUrl.pathname.startsWith('/calendar') ||
+    request.nextUrl.pathname.startsWith('/alerts') ||
+    request.nextUrl.pathname.startsWith('/explore'))
+) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)

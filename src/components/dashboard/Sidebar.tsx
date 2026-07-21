@@ -10,11 +10,11 @@ import { useRouter } from 'next/navigation'
 const ITEMS = [
   { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard' },
   { icon: Map, label: 'Trips', href: '/dashboard' },
-  { icon: Calendar, label: 'Calendar', href: '#' },
-  { icon: Bell, label: 'Alerts', href: '#' },
-  { icon: Compass, label: 'Explore', href: '#' },
-  { icon: User, label: 'Profile', href: '#' },
-  { icon: Settings, label: 'Settings', href: '#' },
+  { icon: Calendar, label: 'Calendar', href: '/calendar' },
+  { icon: Bell, label: 'Alerts', href: '/alerts' },
+  { icon: Compass, label: 'Explore', href: '/explore' },
+  { icon: User, label: 'Profile', href: '/profile' },
+  { icon: Settings, label: 'Settings', href: '/settings' },
 ]
 
 export default function Sidebar() {

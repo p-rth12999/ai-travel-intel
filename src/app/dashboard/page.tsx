@@ -41,7 +41,11 @@ export default async function DashboardPage() {
     .limit(5)
 
   const stats = computeDashboardStats(tripList)
-  const userName = user.email?.split('@')[0] || 'traveler'
+  const userName =
+  (user.user_metadata?.username as string) ||
+  (user.user_metadata?.full_name as string) ||
+  user.email?.split('@')[0] ||
+  'traveler'
 
   if (error) {
     return <div className="p-8 text-sm text-red-600">Couldn&apos;t load your trips: {error.message}</div>
