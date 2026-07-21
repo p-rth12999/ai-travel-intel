@@ -14,30 +14,29 @@ export default function LocationSearch({ onSelect }: { onSelect: (loc: ResolvedL
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
-    if (debounceRef.current) clearTimeout(debounceRef.current)
+  if (debounceRef.current) clearTimeout(debounceRef.current)
 
+  debounceRef.current = setTimeout(async () => {
     if (query.trim().length < 2) {
       setResults([])
       return
     }
-
-    debounceRef.current = setTimeout(async () => {
-      try {
-        const res = await fetch(
-          `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=5&language=en&format=json`
-        )
-        const data = await res.json()
-        setResults(data.results || [])
-        setOpen(true)
-      } catch {
-        setResults([])
-      }
-    }, 350)
-
-    return () => {
-      if (debounceRef.current) clearTimeout(debounceRef.current)
+    try {
+      const res = await fetch(
+        `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=5&language=en&format=json`
+      )
+      const data = await res.json()
+      setResults(data.results || [])
+      setOpen(true)
+    } catch {
+      setResults([])
     }
-  }, [query])
+  }, 350)
+
+  return () => {
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+  }
+}, [query])
 
   function handlePick(r: GeoResult) {
     setQuery(r.name)

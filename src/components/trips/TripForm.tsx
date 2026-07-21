@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -17,6 +17,7 @@ import {
 import { createClient } from '@/lib/supabase/client'
 import DestinationsInput from '@/components/trips/DestinationsInput'
 import TagSelector from '@/components/trips/TagSelector'
+import { useSearchParams } from 'next/navigation'
 
 type TagField = 'interests' | 'foodPreferences' | 'accessibilityNeeds'
 
@@ -48,6 +49,30 @@ export default function TripForm() {
       accessibilityNeeds: [],
     },
   })
+
+  const searchParams = useSearchParams()
+const templateId = searchParams.get('template')
+
+useEffect(() => {
+  if (!templateId) return
+
+  async function loadTemplate() {
+    const { data: template } = await supabase
+      .from('trip_templates')
+      .select('*')
+      .eq('id', templateId)
+      .single()
+
+    if (!template) return
+
+    setValue('title', template.title)
+    setValue('destinations', template.destinations)
+    setValue('transportMode', template.transport_mode)
+    setValue('interests', template.interests)
+  }
+
+  loadTemplate()
+}, [templateId])
 
   function toggleTag(field: TagField, value: string) {
     const current = (watch(field) as string[]) || []
@@ -198,6 +223,7 @@ export default function TripForm() {
           </select>
         </div>
       </div>
+
 
       <TagSelector
   selected={watch('interests') || []}
