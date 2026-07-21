@@ -35,7 +35,9 @@ export async function middleware(request: NextRequest) {
     request.nextUrl.pathname.startsWith('/trips') ||
     request.nextUrl.pathname.startsWith('/calendar') ||
     request.nextUrl.pathname.startsWith('/alerts') ||
-    request.nextUrl.pathname.startsWith('/explore'))
+    request.nextUrl.pathname.startsWith('/explore') ||
+    request.nextUrl.pathname.startsWith('/profile') ||
+    request.nextUrl.pathname.startsWith('/settings'))
 ) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'

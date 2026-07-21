@@ -3,7 +3,7 @@ import { Link2, Mail } from 'lucide-react'
 export default function Footer() {
   return (
     <footer className="px-6 py-14 text-center text-gray-800">
-      <p className="text-sm">© 2026 Vora.</p>
+      <p className="text-sm">© 2026 Voya.</p>
       <p className="mt-1 text-sm">Designed and developed by Parth.</p>
       <p className="mt-1 text-xs text-gray-600">Built with Next.js • Supabase • OpenRouter • TypeScript</p>
       <div className="mt-4 flex items-center justify-center gap-5">

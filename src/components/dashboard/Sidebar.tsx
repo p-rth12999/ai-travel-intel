@@ -1,26 +1,37 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Map, Calendar, Bell, Compass, User, Settings, LogOut } from 'lucide-react'
+import { usePathname, useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { LayoutDashboard, Map, Calendar, Bell, Compass, Settings, LogOut, User } from 'lucide-react'
 import Logo from '@/components/shared/Logo'
 import { createClient } from '@/lib/supabase/client'
-import { useRouter } from 'next/navigation'
 
-const ITEMS = [
+const NAV_ITEMS = [
   { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard' },
   { icon: Map, label: 'Trips', href: '/dashboard' },
   { icon: Calendar, label: 'Calendar', href: '/calendar' },
   { icon: Bell, label: 'Alerts', href: '/alerts' },
   { icon: Compass, label: 'Explore', href: '/explore' },
-  { icon: User, label: 'Profile', href: '/profile' },
-  { icon: Settings, label: 'Settings', href: '/settings' },
 ]
 
 export default function Sidebar() {
   const pathname = usePathname()
   const router = useRouter()
   const supabase = createClient()
+
+  const [profile, setProfile] = useState<{ username: string; avatarUrl: string } | null>(null)
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) {
+        setProfile({
+          username: (user.user_metadata?.username as string) || user.email?.split('@')[0] || 'traveler',
+          avatarUrl: (user.user_metadata?.avatar_url as string) || '',
+        })
+      }
+    })
+  }, [])
 
   async function handleSignOut() {
     await supabase.auth.signOut()
@@ -31,13 +42,14 @@ export default function Sidebar() {
   return (
     <aside className="hidden w-60 shrink-0 flex-col bg-[#0B1832] p-5 lg:flex">
       <div className="mb-8 px-1">
-  <Link href="/">
-    <Logo height={26} />
-  </Link>
-</div>
-      <nav className="flex-1 space-y-1">
-        {ITEMS.map((item) => {
-          const isActive = item.href === pathname
+        <Link href="/">
+          <Logo height={26} />
+        </Link>
+      </div>
+
+      <nav className="space-y-1">
+        {NAV_ITEMS.map((item) => {
+          const isActive = item.href === pathname || (item.label === 'Trips' && pathname.startsWith('/trips'))
           return (
             <Link
               key={item.label}
@@ -51,12 +63,37 @@ export default function Sidebar() {
           )
         })}
       </nav>
-      <button
-        onClick={handleSignOut}
-        className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm text-blue-100/60 hover:bg-white/5 hover:text-white"
-      >
-        <LogOut className="h-4 w-4" /> Sign out
-      </button>
+
+      <div className="mt-auto space-y-1 border-t border-white/10 pt-3">
+        <Link
+          href="/profile"
+          className={`flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm transition ${
+            pathname === '/profile' ? 'bg-white/10 font-medium text-white' : 'text-blue-100/60 hover:bg-white/5 hover:text-white'
+          }`}
+        >
+          {profile?.avatarUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={profile.avatarUrl} alt="" className="h-5 w-5 rounded-full object-cover" />
+          ) : (
+            <User className="h-4 w-4" />
+          )}
+          <span className="truncate">{profile?.username || 'Profile'}</span>
+        </Link>
+        <Link
+  href="/settings"
+  className={`flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm transition ${
+    pathname === '/settings' ? 'bg-white/10 font-medium text-white' : 'text-blue-100/60 hover:bg-white/5 hover:text-white'
+  }`}
+>
+  <Settings className="h-4 w-4" /> Settings
+</Link>
+        <button
+          onClick={handleSignOut}
+          className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm text-blue-100/60 hover:bg-white/5 hover:text-white"
+        >
+          <LogOut className="h-4 w-4" /> Sign out
+        </button>
+      </div>
     </aside>
   )
 }
