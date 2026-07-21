@@ -34,7 +34,7 @@ async function AIWorkspaceSection({ trip }: { trip: Trip }) {
     return <WorkspaceGridSkeleton status="error" />
   }
 
-  return <WorkspaceGrid content={content} tripId={trip.id} />
+  return <WorkspaceGrid content={content} tripId={trip.id} destinationMeta={trip.destination_meta} />
 }
 
 export default async function TripWorkspacePage({

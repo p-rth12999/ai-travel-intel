@@ -132,6 +132,17 @@ accommodationIntelligence: z.object({
     })
   ),
 }),
+journeyPlan: z.object({
+  optimized: z.boolean(),
+  legs: z.array(
+    z.object({
+      from: z.string(),
+      to: z.string(),
+      transportMode: z.string(),
+      note: z.string(),
+    })
+  ),
+}),
   currencyInfo: z
     .object({
       exchangeRateNote: z.string(),

@@ -41,7 +41,13 @@ For mobilityIntelligence: for each destination in the journey, determine if it's
 
 For accommodationIntelligence: for each destination, note anything affecting accommodation demand (season, festivals, holidays) and a recommended booking window, plus a primary recommendation with 2-3 backup alternatives per destination.
 
-Be clear that mobility and accommodation guidance is reasoned advice based on general knowledge, not verified real-time transit schedules or live hotel availability — the user should confirm specifics directly before relying on them.`,
+Be clear that mobility and accommodation guidance is reasoned advice based on general knowledge, not verified real-time transit schedules or live hotel availability — the user should confirm specifics directly before relying on them. 
+Sequencing: ${
+  trip.auto_sequence
+    ? "The destinations above are not necessarily in a good order — determine the most practical order yourself based on real-world geography and transport connectivity, and generate the timeline and journeyPlan in that optimized order."
+    : "The destinations above are in the exact order the traveler wants — do not reorder them, but still flag in journeyPlan if any specific leg lacks a practical direct transport option, and note a realistic alternative in that leg's note field."
+}
+For journeyPlan: produce one leg per consecutive stop, starting from ${trip.source} to the first destination. For each leg, pick the most realistic real-world transport mode based on actual connectivity between those specific places — do not assume a direct route exists just because it looks geographically close; if there's no practical direct option (e.g. no suitable flight connection), name a sensible connecting hub or alternate mode in the note instead. Set journeyPlan.optimized to true only if you changed the input order.`,
       },
     ],
     response_format: zodResponseFormat(tripAIContentSchema, 'trip_ai_content'),

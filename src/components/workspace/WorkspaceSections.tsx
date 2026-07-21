@@ -19,11 +19,19 @@ import MedicalRecommendationsCard from '@/components/workspace/cards/MedicalReco
 import EmergencyInfoCard from '@/components/workspace/cards/EmergencyInfoCard'
 import CurrencyInfoCard from '@/components/workspace/cards/CurrencyInfoCard'
 import OfflineLanguageCard from '@/components/workspace/cards/OfflineLanguageCard'
+import JourneyCard from '@/components/workspace/cards/JourneyCard'
+import { DestinationMeta } from '@/types/trip'
 
 const TABS = ['Overview', 'Planning', 'Food', 'Safety', 'Utilities'] as const
 type Tab = (typeof TABS)[number]
 
-export default function WorkspaceSections({ content }: { content: TripAIContent }) {
+export default function WorkspaceSections({
+   content,
+   destinationMeta,
+ }: {
+   content: TripAIContent
+   destinationMeta: DestinationMeta[] | null
+   }) {
   const [tab, setTab] = useState<Tab>('Overview')
   const hasUtilities = content.tripType === 'international' && (content.currencyInfo || content.offlineLanguage)
 
@@ -34,6 +42,9 @@ export default function WorkspaceSections({ content }: { content: TripAIContent 
       </div>
 
       <div>
+        <div className="mb-5">
+         <JourneyCard journeyPlan={content.journeyPlan} destinationMeta={destinationMeta} />
+      </div>
         <div className="mb-5 flex flex-wrap gap-1 rounded-2xl border border-white bg-white/80 p-1.5 shadow-sm backdrop-blur print:hidden">
           {TABS.filter((t) => t !== 'Utilities' || hasUtilities).map((t) => (
             <button

@@ -7,16 +7,23 @@ export function computeDashboardStats(trips: Trip[]) {
     return created.getMonth() === now.getMonth() && created.getFullYear() === now.getFullYear()
   }).length
 
-  // Heuristic: treat the text after the last comma in each destination as a
-  // rough "country" — not real geocoding, just a lightweight approximation.
   const countries = new Set<string>()
   const cities = new Set<string>()
+
   trips.forEach((t) => {
-    t.destinations.forEach((d) => {
-      cities.add(d.trim())
-      const parts = d.split(',')
-      countries.add(parts[parts.length - 1].trim().toLowerCase())
-    })
+    if (t.destination_meta && t.destination_meta.length > 0) {
+      t.destination_meta.forEach((m) => {
+        cities.add(m.destination.trim())
+        if (m.country) countries.add(m.country.toLowerCase())
+      })
+    } else {
+      // Fallback for trips created before geocoding was added
+      t.destinations.forEach((d) => {
+        cities.add(d.trim())
+        const parts = d.split(',')
+        countries.add(parts[parts.length - 1].trim().toLowerCase())
+      })
+    }
   })
 
   const withAIContent = trips.filter((t) => t.ai_content).length

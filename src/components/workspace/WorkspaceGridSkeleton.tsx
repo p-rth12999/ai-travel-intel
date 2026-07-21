@@ -1,3 +1,5 @@
+import { Loader2 } from 'lucide-react'
+
 export default function WorkspaceGridSkeleton({ status }: { status: 'loading' | 'error' }) {
   if (status === 'error') {
     return (
@@ -6,18 +8,22 @@ export default function WorkspaceGridSkeleton({ status }: { status: 'loading' | 
       </div>
     )
   }
-
   return (
-    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {Array.from({ length: 10 }).map((_, i) => (
-        <div key={i} className="animate-pulse rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-          <div className="mb-4 h-4 w-1/3 rounded bg-gray-200" />
-          <div className="space-y-2">
-            <div className="h-3 w-full rounded bg-gray-200" />
-            <div className="h-3 w-2/3 rounded bg-gray-200" />
+    <div>
+      <div className="mb-4 flex items-center gap-2 text-sm text-gray-500">
+        <Loader2 className="h-4 w-4 animate-spin" /> Generating your AI trip plan...
+      </div>
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {Array.from({ length: 10 }).map((_, i) => (
+          <div key={i} className="animate-pulse rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+            <div className="mb-4 h-4 w-1/3 rounded bg-gray-200" />
+            <div className="space-y-2">
+              <div className="h-3 w-full rounded bg-gray-200" />
+              <div className="h-3 w-2/3 rounded bg-gray-200" />
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   )
 }

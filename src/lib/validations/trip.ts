@@ -54,6 +54,7 @@ export const tripFormSchema = z
     interests: z.array(z.enum(TRIP_INTERESTS)).default([]),
     foodPreferences: z.array(z.enum(FOOD_PREFERENCES)).default([]),
     accessibilityNeeds: z.array(z.enum(ACCESSIBILITY_NEEDS)).default([]),
+    autoSequence: z.boolean().default(true),
   })
   .refine((data) => new Date(data.endDate) >= new Date(data.startDate), {
     message: 'End date must be on or after the start date',

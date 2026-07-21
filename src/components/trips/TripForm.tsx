@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -15,6 +16,7 @@ import {
   ACCESSIBILITY_NEEDS,
 } from '@/lib/validations/trip'
 import { createClient } from '@/lib/supabase/client'
+import { buildDestinationMeta } from '@/lib/geo/geocode'
 import DestinationsInput from '@/components/trips/DestinationsInput'
 import TagSelector from '@/components/trips/TagSelector'
 import { useSearchParams } from 'next/navigation'
@@ -47,6 +49,7 @@ export default function TripForm() {
       interests: [],
       foodPreferences: [],
       accessibilityNeeds: [],
+      autoSequence: true,
     },
   })
 
@@ -92,11 +95,15 @@ useEffect(() => {
       return
     }
 
+    const destinationMeta = await buildDestinationMeta(data.destinations)
+
     const { error } = await supabase.from('trips').insert({
       user_id: user.id,
       title: data.title,
       source: data.source,
       destinations: data.destinations,
+      destination_meta: destinationMeta,
+      auto_sequence: data.autoSequence,
       start_date: data.startDate,
       end_date: data.endDate,
       travelers: data.travelers,
@@ -156,6 +163,10 @@ useEffect(() => {
   onChange={(destinations) => setValue('destinations', destinations)}
   error={errors.destinations?.message}
 />
+<label className="flex items-center gap-2 text-sm text-gray-700">
+  <input type="checkbox" {...register('autoSequence')} className="h-4 w-4 rounded border-gray-300" defaultChecked />
+  Let AI figure out the best order for these stops
+</label>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
@@ -247,9 +258,9 @@ useEffect(() => {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full rounded-lg bg-blue-600 py-2.5 font-medium text-white transition hover:bg-blue-700 disabled:opacity-50"
+        className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 py-2.5 font-medium text-white transition hover:bg-blue-700 disabled:opacity-50"
       >
-        {isSubmitting ? 'Creating...' : 'Create Trip'}
+        {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />} {isSubmitting ? 'Creating...' : 'Create Trip'}
       </button>
     </form>
   )

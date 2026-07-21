@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Sparkles } from 'lucide-react'
+import { Sparkles, Loader2 } from 'lucide-react'
 import LocationSearch, { ResolvedLocation } from './LocationSearch'
 import TemplateFilters from './TemplateFilters'
 import TemplateCard, { TripTemplate } from './TemplateCard'
@@ -55,7 +55,8 @@ export default function ExploreClient({ templates }: { templates: (TripTemplate 
           disabled={!location || generating}
           className="flex items-center gap-1.5 whitespace-nowrap rounded-full bg-purple-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-purple-700 disabled:opacity-50"
         >
-          <Sparkles className="h-4 w-4" /> {generating ? 'Generating...' : 'Generate more'}
+          {generating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+          {generating ? 'Generating...' : 'Generate more'}
         </button>
       </div>
 
