@@ -12,7 +12,7 @@ const NAV_ITEMS = [
   { icon: Map, label: 'Trips', href: '/dashboard' },
   { icon: Calendar, label: 'Calendar', href: '/calendar' },
   { icon: Bell, label: 'Alerts', href: '/alerts' },
-  { icon: Compass, label: 'Explore', href: '/explore' },
+  { icon: Compass, label: 'Explore Trips', href: '/explore' },
 ]
 
 export default function Sidebar() {
