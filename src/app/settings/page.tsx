@@ -12,7 +12,7 @@ export default async function SettingsPage() {
     <div className="flex flex-col min-h-screen bg-[#DEEDFC] lg:flex-row">
       <Sidebar />
       <div className="flex flex-1 flex-col items-center justify-center p-6 text-center lg:p-8">
-        <h1 className="mb-6 text-2xl font-semibold text-gray-900">Koi meri bhi setting kara do</h1>
+        <h1 className="mb-6 text-2xl font-semibold text-gray-900">coming soon</h1>
         <Image
           src="/images/settings-photo.jpeg"
           alt="Settings coming soon"
