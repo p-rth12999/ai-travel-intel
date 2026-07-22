@@ -13,7 +13,7 @@ export default async function ExplorePage() {
       <Sidebar />
       <div className="flex-1 p-6 lg:p-8">
         <h1 className="mb-6 text-xl font-semibold text-gray-900">Explore</h1>
-        <ExploreClient initialTemplates={[]} />
+        <ExploreClient />
       </div>
     </div>
   )

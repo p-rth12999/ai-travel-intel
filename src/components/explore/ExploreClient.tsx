@@ -1,12 +1,12 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { Loader2, LocateFixed, MapPin } from 'lucide-react'
 import LocationSearch, { ResolvedLocation } from './LocationSearch'
 import TemplateCard, { TripTemplate } from './TemplateCard'
 import { haversineDistanceKm } from '@/lib/geo/distance'
 import { reverseGeocode } from '@/lib/geo/reverse-geocode'
+import { createClient } from '@/lib/supabase/client'
 
 const BUCKET_SECTIONS: { key: string; label: string }[] = [
   { key: '1_day', label: 'Day Trips' },
@@ -17,17 +17,36 @@ const BUCKET_SECTIONS: { key: string; label: string }[] = [
 
 type FullTemplate = TripTemplate & { latitude: number; longitude: number; duration_bucket: string | null }
 
-export default function ExploreClient({ initialTemplates }: { initialTemplates: FullTemplate[] }) {
+export default function ExploreClient() {
+  const supabase = createClient()
   const [location, setLocation] = useState<ResolvedLocation | null>(null)
   const [includeInternational, setIncludeInternational] = useState(false)
-  const [templates, setTemplates] = useState<FullTemplate[]>(initialTemplates)
-  const [status, setStatus] = useState<'idle' | 'locating' | 'generating' | 'denied'>('idle')
-  const router = useRouter()
+  const [templates, setTemplates] = useState<FullTemplate[]>([])
+  const [status, setStatus] = useState<'idle' | 'locating' | 'generating' | 'denied' | 'error'>('idle')
+
+  async function fetchTemplatesForLocation(loc: ResolvedLocation) {
+    const box = 0.3
+    const { data, error } = await supabase
+      .from('trip_templates')
+      .select('*')
+      .gte('latitude', loc.lat - box)
+      .lte('latitude', loc.lat + box)
+      .gte('longitude', loc.lon - box)
+      .lte('longitude', loc.lon + box)
+
+    if (error) {
+      console.error('Fetching templates failed:', error)
+      setStatus('error')
+      return
+    }
+
+    setTemplates((data as FullTemplate[]) || [])
+  }
 
   async function generateAndRefresh(loc: ResolvedLocation) {
     setStatus('generating')
     try {
-      await fetch('/api/generate-templates', {
+      const res = await fetch('/api/generate-templates', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -37,10 +56,21 @@ export default function ExploreClient({ initialTemplates }: { initialTemplates: 
           includeInternational,
         }),
       })
-      router.refresh()
-    } finally {
-      setStatus('idle')
+
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        console.error('Generation request failed:', res.status, body)
+        setStatus('error')
+        return
+      }
+
+      await fetchTemplatesForLocation(loc)
+    } catch (err) {
+      console.error('Generation request threw:', err)
+      setStatus('error')
+      return
     }
+    setStatus('idle')
   }
 
   useEffect(() => {
@@ -93,6 +123,8 @@ export default function ExploreClient({ initialTemplates }: { initialTemplates: 
     })
   }, [templates, location])
 
+  const hasAnyResults = grouped.some((s) => s.items.length > 0)
+
   return (
     <div>
       <div className="mb-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -133,7 +165,19 @@ export default function ExploreClient({ initialTemplates }: { initialTemplates: 
         </div>
       )}
 
-      {location && status === 'idle' && (
+      {status === 'error' && (
+        <div className="flex flex-col items-center gap-2 rounded-2xl border border-red-100 bg-red-50/70 p-10 text-center text-sm text-red-600">
+          Something went wrong generating trip ideas. Try searching again.
+        </div>
+      )}
+
+      {location && status === 'idle' && !hasAnyResults && (
+        <div className="flex flex-col items-center gap-2 rounded-2xl border border-gray-200 bg-white/70 p-10 text-center text-sm text-gray-500">
+          No trip ideas found near {location.name} yet.
+        </div>
+      )}
+
+      {location && status === 'idle' && hasAnyResults && (
         <div className="space-y-8">
           {grouped.map((section) =>
             section.items.length > 0 ? (

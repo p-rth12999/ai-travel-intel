@@ -7,20 +7,20 @@ export const TEMPLATE_TAGS = ['trek', 'fort', 'temple', 'beach', 'chill', 'adven
 export const tripTemplateSuggestionSchema = z.object({
   title: z.string(),
   description: z.string(),
-  destinations: z.array(z.string()).min(1),
+  destinations: z.array(z.string()),
   transportMode: z.enum(TRANSPORT_MODES),
   interests: z.array(z.enum(TRIP_INTERESTS)),
-  tags: z.array(z.enum(TEMPLATE_TAGS)).min(1),
-  durationDaysMin: z.number().int().min(1).max(20),
-  durationDaysMax: z.number().int().min(1).max(20),
+  tags: z.array(z.enum(TEMPLATE_TAGS)),
+  durationDaysMin: z.number().int(),
+  durationDaysMax: z.number().int(),
   isInternational: z.boolean(),
 })
 
 export const tripTemplateBucketsResponseSchema = z.object({
-  oneDay: z.array(tripTemplateSuggestionSchema).min(1).max(4),
-  threeDay: z.array(tripTemplateSuggestionSchema).min(1).max(4),
-  sevenDay: z.array(tripTemplateSuggestionSchema).min(1).max(4),
-  fifteenDay: z.array(tripTemplateSuggestionSchema).min(1).max(4),
+  oneDay: z.array(tripTemplateSuggestionSchema),
+  threeDay: z.array(tripTemplateSuggestionSchema),
+  sevenDay: z.array(tripTemplateSuggestionSchema),
+  fifteenDay: z.array(tripTemplateSuggestionSchema),
 })
 
 export type TripTemplateSuggestion = z.infer<typeof tripTemplateSuggestionSchema>

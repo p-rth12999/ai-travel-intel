@@ -15,7 +15,7 @@ export async function generateTripTemplateBuckets(
       {
         role: 'system',
         content:
-          'You are a travel recommendation assistant. Suggest real, well-known trip ideas genuinely reachable from a given location, grouped by trip length. Only suggest places that actually exist — do not invent place names. If unsure of a hyper-local option, suggest the closest well-known regional option you do know of instead of fabricating something closer.',
+          'You are a travel recommendation assistant. Suggest real, well-known trip ideas genuinely reachable from a given location, grouped by trip length. Only suggest places that actually exist — do not invent place names. If unsure of a hyper-local option, suggest the closest well-known regional option you do know of instead of fabricating something closer. For each bucket, return at most 4 suggestions and at least 1.',
       },
       {
         role: 'user',
@@ -33,5 +33,11 @@ For each suggestion, provide a title, 1-2 sentence description, destination name
 
   const parsed = completion.choices[0].message.parsed
   if (!parsed) throw new Error('OpenAI did not return valid template suggestions.')
-  return parsed
+
+  return {
+    oneDay: parsed.oneDay.slice(0, 4),
+    threeDay: parsed.threeDay.slice(0, 4),
+    sevenDay: parsed.sevenDay.slice(0, 4),
+    fifteenDay: parsed.fifteenDay.slice(0, 4),
+  }
 }
