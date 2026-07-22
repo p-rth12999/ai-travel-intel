@@ -6,6 +6,7 @@ import { X } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { Trip } from '@/types/trip'
 import { CURRENCIES, TRANSPORT_MODES, TRIP_INTERESTS, FOOD_PREFERENCES, ACCESSIBILITY_NEEDS } from '@/lib/validations/trip'
+import { buildDestinationMeta } from '@/lib/geo/geocode'
 import DestinationsInput from '@/components/trips/DestinationsInput'
 import TagSelector from '@/components/trips/TagSelector'
 
@@ -36,12 +37,17 @@ export default function EditTripDialog({ trip, onClose }: { trip: Trip; onClose:
     setSaving(true)
     setError(null)
 
+    const [sourceMeta] = await buildDestinationMeta([source])
+    const destinationMeta = await buildDestinationMeta(destinations)
+
     const { error: updateError } = await supabase
       .from('trips')
       .update({
         title,
         source,
         destinations,
+        destination_meta: destinationMeta,
+        source_meta: sourceMeta,
         start_date: startDate,
         end_date: endDate,
         travelers,
@@ -67,7 +73,7 @@ export default function EditTripDialog({ trip, onClose }: { trip: Trip; onClose:
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4 backdrop-blur-sm">
-  <div className="flex max-h-[85vh] w-full max-w-xl flex-col rounded-3xl border border-white/40 bg-white/80 p-6 shadow-2xl backdrop-blur-xl">
+      <div className="flex max-h-[85vh] w-full max-w-xl flex-col rounded-3xl border border-white/40 bg-white/80 p-6 shadow-2xl backdrop-blur-xl">
         <div className="mb-4 flex items-center justify-between">
           <h3 className="text-lg font-semibold text-gray-900">Edit trip details</h3>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600">

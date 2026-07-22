@@ -4,6 +4,7 @@ import { tripAIContentSchema } from '@/lib/validations/trip-ai-content'
 export const EDITABLE_CARDS = [
   { key: 'overview', name: 'update_overview', schema: tripAIContentSchema.shape.overview },
   { key: 'timeline', name: 'update_timeline', schema: tripAIContentSchema.shape.timeline },
+  { key: 'journeyPlan', name: 'update_journey_plan', schema: tripAIContentSchema.shape.journeyPlan },
   { key: 'packingChecklist', name: 'update_packing_checklist', schema: tripAIContentSchema.shape.packingChecklist },
   { key: 'worthItAnalysis', name: 'update_worth_it_analysis', schema: tripAIContentSchema.shape.worthItAnalysis },
   { key: 'crowdIntelligence', name: 'update_crowd_intelligence', schema: tripAIContentSchema.shape.crowdIntelligence },
@@ -13,7 +14,8 @@ export const EDITABLE_CARDS = [
   { key: 'weather', name: 'update_weather', schema: tripAIContentSchema.shape.weather },
   { key: 'medicalRecommendations', name: 'update_medical_recommendations', schema: tripAIContentSchema.shape.medicalRecommendations },
   { key: 'smartChecklist', name: 'update_smart_checklist', schema: tripAIContentSchema.shape.smartChecklist },
-  { key: 'hiddenGems', name: 'update_hidden_gems', schema: tripAIContentSchema.shape.hiddenGems },
+  { key: 'mobilityIntelligence', name: 'update_mobility_intelligence', schema: tripAIContentSchema.shape.mobilityIntelligence },
+  { key: 'accommodationIntelligence', name: 'update_accommodation_intelligence', schema: tripAIContentSchema.shape.accommodationIntelligence },
 ] as const
 
 export const cardEditTools = EDITABLE_CARDS.map((card) =>

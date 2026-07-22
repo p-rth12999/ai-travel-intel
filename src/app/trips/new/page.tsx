@@ -19,10 +19,9 @@ export default function NewTripPage() {
         </div>
 
         <div className="rounded-3xl border border-white/10 bg-white/95 p-6 shadow-2xl backdrop-blur">
-          <TripForm />
           <Suspense fallback={<div className="p-6 text-center text-sm text-gray-400">Loading form...</div>}>
-           <TripForm />
-         </Suspense>
+            <TripForm />
+          </Suspense>
         </div>
       </div>
     </div>

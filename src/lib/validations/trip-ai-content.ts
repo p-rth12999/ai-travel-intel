@@ -3,6 +3,25 @@ import { z } from 'zod'
 export const tripAIContentSchema = z.object({
   tripType: z.enum(['domestic', 'international']),
 
+  journeyPlan: z.object({
+    optimized: z.boolean(),
+    legs: z.array(
+      z.object({
+        from: z.string(),
+        to: z.string(),
+        transportMode: z.string(),
+        note: z.string(),
+        estimatedTravelTime: z.string(),
+        hiddenGems: z.array(
+          z.object({
+            name: z.string(),
+            description: z.string(),
+          })
+        ).default([]),
+      })
+    ),
+  }),
+
   overview: z.object({
     summary: z.string(),
     highlights: z.array(z.string()),
@@ -86,63 +105,42 @@ export const tripAIContentSchema = z.object({
       })
     ),
   }),
-  hiddenGems: z.object({
-    spots: z.array(
+  emergencyInfo: z.object({
+    items: z.array(
       z.object({
+        type: z.enum(['hospital', 'pharmacy', 'emergency_number', 'consulate']),
         name: z.string(),
-        description: z.string(),
-        whyHiddenGem: z.string(),
+        detail: z.string(),
       })
     ),
   }),
-  emergencyInfo: z.object({
-  items: z.array(
-    z.object({
-      type: z.enum(['hospital', 'pharmacy', 'emergency_number', 'consulate']),
-      name: z.string(),
-      detail: z.string(),
-    })
-  ),
-}),
-mobilityIntelligence: z.object({
-  destinationNotes: z.array(
-    z.object({
-      destination: z.string(),
-      isCarFree: z.boolean(),
-      recommendedRoute: z.array(z.string()),
-      reasoning: z.string(),
-    })
-  ),
-  rentalVehicleAssessment: z.string().nullable(),
-}),
-
-accommodationIntelligence: z.object({
-  insights: z.array(
-    z.object({
-      destination: z.string(),
-      insight: z.string(),
-      recommendedBookingWindow: z.string(),
-    })
-  ),
-  recommendations: z.array(
-    z.object({
-      destination: z.string(),
-      primary: z.string(),
-      alternatives: z.array(z.string()),
-    })
-  ),
-}),
-journeyPlan: z.object({
-  optimized: z.boolean(),
-  legs: z.array(
-    z.object({
-      from: z.string(),
-      to: z.string(),
-      transportMode: z.string(),
-      note: z.string(),
-    })
-  ),
-}),
+  mobilityIntelligence: z.object({
+    destinationNotes: z.array(
+      z.object({
+        destination: z.string(),
+        isCarFree: z.boolean(),
+        recommendedRoute: z.array(z.string()),
+        reasoning: z.string(),
+      })
+    ),
+    rentalVehicleAssessment: z.string().nullable(),
+  }),
+  accommodationIntelligence: z.object({
+    insights: z.array(
+      z.object({
+        destination: z.string(),
+        insight: z.string(),
+        recommendedBookingWindow: z.string(),
+      })
+    ),
+    recommendations: z.array(
+      z.object({
+        destination: z.string(),
+        primary: z.string(),
+        alternatives: z.array(z.string()),
+      })
+    ),
+  }),
   currencyInfo: z
     .object({
       exchangeRateNote: z.string(),

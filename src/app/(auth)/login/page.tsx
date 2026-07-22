@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import Logo from '@/components/shared/Logo'
+import { Loader2 } from 'lucide-react'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -18,39 +19,38 @@ export default function LoginPage() {
   const supabase = createClient()
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError(null)
-    setMessage(null)
-    setLoading(true)
+  e.preventDefault()
+  setError(null)
+  setMessage(null)
+  setLoading(true)
 
-    if (mode === 'forgot') {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/callback?next=/reset-password`,
-      })
-      setLoading(false)
-      if (error) {
-        setError(error.message)
-        return
-      }
-      setMessage('Check your email for a password reset link.')
-      return
-    }
-
-    const { error } =
-      mode === 'signup'
-        ? await supabase.auth.signUp({ email, password, options: { data: { username } } })
-        : await supabase.auth.signInWithPassword({ email, password })
-
+  if (mode === 'forgot') {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/callback?next=/reset-password`,
+    })
     setLoading(false)
-
     if (error) {
       setError(error.message)
       return
     }
-
-    router.push('/dashboard')
-    router.refresh()
+    setMessage('Check your email for a password reset link.')
+    return
   }
+
+  const { error } =
+    mode === 'signup'
+      ? await supabase.auth.signUp({ email, password, options: { data: { username } } })
+      : await supabase.auth.signInWithPassword({ email, password })
+
+  if (error) {
+    setLoading(false)
+    setError(error.message)
+    return
+  }
+
+  router.push('/dashboard')
+  router.refresh()
+}
 
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#0B1832] px-4">
@@ -125,12 +125,13 @@ export default function LoginPage() {
           {message && <p className="text-sm text-green-600">{message}</p>}
 
           <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-full bg-blue-600 py-2.5 font-medium text-white transition hover:bg-blue-700 disabled:opacity-50"
-          >
-            {loading ? 'Please wait...' : mode === 'signup' ? 'Sign up' : mode === 'forgot' ? 'Send reset link' : 'Sign In'}
-          </button>
+  type="submit"
+  disabled={loading}
+  className="flex w-full items-center justify-center gap-2 rounded-full bg-blue-600 py-2.5 font-medium text-white transition hover:bg-blue-700 disabled:opacity-50"
+>
+  {loading && <Loader2 className="h-4 w-4 animate-spin" />}
+  {loading ? 'Please wait...' : mode === 'signup' ? 'Sign up' : mode === 'forgot' ? 'Send reset link' : 'Sign In'}
+</button>
         </form>
 
         <button

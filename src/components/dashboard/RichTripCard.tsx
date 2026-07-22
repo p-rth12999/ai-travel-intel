@@ -1,11 +1,15 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { Sparkles, HardDriveDownload, Radio, Star } from 'lucide-react'
+import { Sparkles, HardDriveDownload, Radio, Star, Trash2 } from 'lucide-react'
 import { Trip } from '@/types/trip'
 import { computeDisplayStatus } from '@/lib/trip-status'
 import { getTripHeroImage } from '@/lib/trip-hero-image'
+import { createClient } from '@/lib/supabase/client'
+import ConfirmDialog from '@/components/shared/ConfirmDialog'
 
 const STATUS_STYLES = {
   planning: 'bg-gray-900/70 text-white',
@@ -22,9 +26,22 @@ function healthPillStyle(score: number) {
 }
 
 export default function RichTripCard({ trip, avgRating }: { trip: Trip; avgRating: number | null }) {
+  const router = useRouter()
+  const supabase = createClient()
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+
   const status = computeDisplayStatus(trip)
   const health = (trip.trip_health as { score?: number } | null)?.score
   const heroImage = getTripHeroImage(trip.id)
+
+  async function handleDelete() {
+    setDeleting(true)
+    await supabase.from('trips').delete().eq('id', trip.id)
+    setDeleting(false)
+    setShowDeleteConfirm(false)
+    router.refresh()
+  }
 
   return (
     <motion.div
@@ -32,7 +49,20 @@ export default function RichTripCard({ trip, avgRating }: { trip: Trip; avgRatin
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -6 }}
       transition={{ duration: 0.3 }}
+      className="relative"
     >
+      <button
+        onClick={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          setShowDeleteConfirm(true)
+        }}
+        className="absolute right-3 top-3 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-md transition hover:bg-red-600/80"
+        title="Delete trip"
+      >
+        <Trash2 className="h-3.5 w-3.5" />
+      </button>
+
       <Link
         href={`/trips/${trip.id}`}
         className="group block overflow-hidden rounded-3xl border border-white bg-white shadow-sm transition-shadow duration-300 hover:shadow-2xl"
@@ -50,7 +80,7 @@ export default function RichTripCard({ trip, avgRating }: { trip: Trip; avgRatin
             {STATUS_LABELS[status]}
           </span>
           {typeof health === 'number' && (status === 'upcoming' || status === 'planning') && (
-            <span className={`absolute right-3 top-3 rounded-full px-2 py-1 text-xs font-semibold backdrop-blur ${healthPillStyle(health)}`}>
+            <span className={`absolute right-11 top-3 rounded-full px-2 py-1 text-xs font-semibold backdrop-blur ${healthPillStyle(health)}`}>
               {health}%
             </span>
           )}
@@ -89,6 +119,16 @@ export default function RichTripCard({ trip, avgRating }: { trip: Trip; avgRatin
           </div>
         </div>
       </Link>
+
+      <ConfirmDialog
+        open={showDeleteConfirm}
+        title="Delete this trip?"
+        message="This permanently deletes the trip and all its AI-generated content. This cannot be undone."
+        confirmLabel="Delete Trip"
+        confirming={deleting}
+        onConfirm={handleDelete}
+        onCancel={() => setShowDeleteConfirm(false)}
+      />
     </motion.div>
   )
 }

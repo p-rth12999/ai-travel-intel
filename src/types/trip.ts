@@ -1,13 +1,12 @@
 export type TripStatus = 'planning' | 'upcoming' | 'completed' | 'cancelled'
 
-
 export type DestinationMeta = {
   destination: string
-     country: string | null
-   countryCode: string | null
+  country: string | null
+  countryCode: string | null
   lat: number | null
   lon: number | null
- }
+}
 
 export interface Trip {
   id: string
@@ -16,6 +15,7 @@ export interface Trip {
   source: string
   destinations: string[]
   destination_meta: DestinationMeta[] | null
+  source_meta: DestinationMeta | null
   auto_sequence: boolean
   start_date: string
   end_date: string

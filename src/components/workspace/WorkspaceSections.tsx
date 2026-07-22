@@ -2,11 +2,12 @@
 
 import { useState } from 'react'
 import { TripAIContent } from '@/lib/validations/trip-ai-content'
+import { DestinationMeta } from '@/types/trip'
+import JourneyCard from '@/components/workspace/cards/JourneyCard'
 import OverviewCard from '@/components/workspace/cards/OverviewCard'
 import TimelineCard from '@/components/workspace/cards/TimelineCard'
 import PackingChecklistCard from '@/components/workspace/cards/PackingChecklistCard'
 import WorthItAnalysisCard from '@/components/workspace/cards/WorthItAnalysisCard'
-import HiddenGemsCard from '@/components/workspace/cards/HiddenGemsCard'
 import CrowdIntelligenceCard from '@/components/workspace/cards/CrowdIntelligenceCard'
 import SmartChecklistCard from '@/components/workspace/cards/SmartChecklistCard'
 import MobilityIntelligenceCard from '@/components/workspace/cards/MobilityIntelligenceCard'
@@ -19,19 +20,19 @@ import MedicalRecommendationsCard from '@/components/workspace/cards/MedicalReco
 import EmergencyInfoCard from '@/components/workspace/cards/EmergencyInfoCard'
 import CurrencyInfoCard from '@/components/workspace/cards/CurrencyInfoCard'
 import OfflineLanguageCard from '@/components/workspace/cards/OfflineLanguageCard'
-import JourneyCard from '@/components/workspace/cards/JourneyCard'
-import { DestinationMeta } from '@/types/trip'
 
 const TABS = ['Overview', 'Planning', 'Food', 'Safety', 'Utilities'] as const
 type Tab = (typeof TABS)[number]
 
 export default function WorkspaceSections({
-   content,
-   destinationMeta,
- }: {
-   content: TripAIContent
-   destinationMeta: DestinationMeta[] | null
-   }) {
+  content,
+  sourceMeta,
+  destinationMeta,
+}: {
+  content: TripAIContent
+  sourceMeta: DestinationMeta | null
+  destinationMeta: DestinationMeta[] | null
+}) {
   const [tab, setTab] = useState<Tab>('Overview')
   const hasUtilities = content.tripType === 'international' && (content.currencyInfo || content.offlineLanguage)
 
@@ -43,8 +44,9 @@ export default function WorkspaceSections({
 
       <div>
         <div className="mb-5">
-         <JourneyCard journeyPlan={content.journeyPlan} destinationMeta={destinationMeta} />
-      </div>
+          <JourneyCard journeyPlan={content.journeyPlan} sourceMeta={sourceMeta} destinationMeta={destinationMeta} />
+        </div>
+
         <div className="mb-5 flex flex-wrap gap-1 rounded-2xl border border-white bg-white/80 p-1.5 shadow-sm backdrop-blur print:hidden">
           {TABS.filter((t) => t !== 'Utilities' || hasUtilities).map((t) => (
             <button
@@ -65,7 +67,6 @@ export default function WorkspaceSections({
         <div className={`grid grid-cols-1 gap-5 sm:grid-cols-2 print:grid-cols-1 ${tab === 'Planning' ? 'grid' : 'hidden print:grid'}`}>
           <PackingChecklistCard data={content.packingChecklist} />
           <WorthItAnalysisCard data={content.worthItAnalysis} />
-          <HiddenGemsCard data={content.hiddenGems} />
           <CrowdIntelligenceCard data={content.crowdIntelligence} />
           <SmartChecklistCard data={content.smartChecklist} />
           <MobilityIntelligenceCard data={content.mobilityIntelligence} />

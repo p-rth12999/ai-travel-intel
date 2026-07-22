@@ -87,44 +87,45 @@ useEffect(() => {
   }
 
   const onSubmit = async (data: TripFormValues) => {
-    setSubmitError(null)
+  setSubmitError(null)
 
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) {
-      setSubmitError('You must be signed in to create a trip.')
-      return
-    }
-
-    const destinationMeta = await buildDestinationMeta(data.destinations)
-
-    const { error } = await supabase.from('trips').insert({
-      user_id: user.id,
-      title: data.title,
-      source: data.source,
-      destinations: data.destinations,
-      destination_meta: destinationMeta,
-      auto_sequence: data.autoSequence,
-      start_date: data.startDate,
-      end_date: data.endDate,
-      travelers: data.travelers,
-      budget: data.budget,
-      currency: data.currency,
-      transport_mode: data.transportMode,
-      interests: data.interests,
-      food_preferences: data.foodPreferences,
-      accessibility_needs: data.accessibilityNeeds,
-      status: 'planning',
-    })
-
-    if (error) {
-      setSubmitError(error.message)
-      return
-    }
-
-    router.push('/dashboard')
-    router.refresh()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    setSubmitError('You must be signed in to create a trip.')
+    return
   }
 
+  const [sourceMeta] = await buildDestinationMeta([data.source])
+  const destinationMeta = await buildDestinationMeta(data.destinations)
+
+  const { error } = await supabase.from('trips').insert({
+    user_id: user.id,
+    title: data.title,
+    source: data.source,
+    destinations: data.destinations,
+    destination_meta: destinationMeta,
+    source_meta: sourceMeta,
+    auto_sequence: data.autoSequence,
+    start_date: data.startDate,
+    end_date: data.endDate,
+    travelers: data.travelers,
+    budget: data.budget,
+    currency: data.currency,
+    transport_mode: data.transportMode,
+    interests: data.interests,
+    food_preferences: data.foodPreferences,
+    accessibility_needs: data.accessibilityNeeds,
+    status: 'planning',
+  })
+
+  if (error) {
+    setSubmitError(error.message)
+    return
+  }
+
+  router.push('/dashboard')
+  router.refresh()
+}
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
