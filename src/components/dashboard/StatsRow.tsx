@@ -1,7 +1,6 @@
 'use client'
-
 import { motion } from 'framer-motion'
-import { Map, Globe, Building2, Sparkles, HeartPulse, Plane } from 'lucide-react'
+import { Map, Globe, Building2, Sparkles, HeartPulse } from 'lucide-react'
 import AnimatedCounter from '@/components/dashboard/AnimatedCounter'
 import { computeDashboardStats } from '@/lib/dashboard-stats'
 
@@ -9,11 +8,10 @@ export default function StatsRow({ stats }: { stats: ReturnType<typeof computeDa
   const cards = [
     { icon: Map, color: 'bg-blue-50 text-blue-600', label: 'Trips Planned', value: stats.tripsPlanned, sub: stats.tripsThisMonth > 0 ? `+${stats.tripsThisMonth} this month` : undefined },
     { icon: Globe, color: 'bg-purple-50 text-purple-600', label: 'Countries', value: stats.countriesVisited },
-    { icon: Building2, color: 'bg-amber-50 text-amber-600', label: 'Cities', value: stats.citiesExplored },
+    { icon: Building2, color: 'bg-amber-50 text-amber-600', label: 'Places', value: stats.placesExplored },
     { icon: Sparkles, color: 'bg-indigo-50 text-indigo-600', label: 'AI Suggestions', value: stats.aiSuggestionsUsedPct, suffix: '%' },
     { icon: HeartPulse, color: 'bg-green-50 text-green-600', label: 'Avg Trip Health', value: stats.avgTripHealth ?? 0, suffix: stats.avgTripHealth !== null ? '%' : '', display: stats.avgTripHealth === null ? '—' : undefined },
   ]
-
   return (
     <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
       {cards.map((card, i) => (

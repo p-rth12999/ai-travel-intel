@@ -8,17 +8,12 @@ export default async function ExplorePage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: templates } = await supabase
-    .from('trip_templates')
-    .select('*')
-    .order('popularity_score', { ascending: false })
-
   return (
     <div className="flex flex-col min-h-screen bg-[#DEEDFC] lg:flex-row">
       <Sidebar />
       <div className="flex-1 p-6 lg:p-8">
         <h1 className="mb-6 text-xl font-semibold text-gray-900">Explore</h1>
-        <ExploreClient templates={templates || []} />
+        <ExploreClient initialTemplates={[]} />
       </div>
     </div>
   )

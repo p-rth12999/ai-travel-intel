@@ -8,18 +8,17 @@ export function computeDashboardStats(trips: Trip[]) {
   }).length
 
   const countries = new Set<string>()
-  const cities = new Set<string>()
+  const places = new Set<string>()
 
   trips.forEach((t) => {
     if (t.destination_meta && t.destination_meta.length > 0) {
       t.destination_meta.forEach((m) => {
-        cities.add(m.destination.trim())
+        places.add(m.destination.trim())
         if (m.country) countries.add(m.country.toLowerCase())
       })
     } else {
-      // Fallback for trips created before geocoding was added
       t.destinations.forEach((d) => {
-        cities.add(d.trim())
+        places.add(d.trim())
         const parts = d.split(',')
         countries.add(parts[parts.length - 1].trim().toLowerCase())
       })
@@ -38,7 +37,7 @@ export function computeDashboardStats(trips: Trip[]) {
     tripsPlanned: trips.length,
     tripsThisMonth: thisMonthCount,
     countriesVisited: countries.size,
-    citiesExplored: cities.size,
+    placesExplored: places.size,
     aiSuggestionsUsedPct,
     avgTripHealth: avgHealth,
   }

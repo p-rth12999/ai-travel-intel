@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Flame, MapPin, Sparkles } from 'lucide-react'
+import { MapPin, Sparkles, Globe2 } from 'lucide-react'
 
 export type TripTemplate = {
   id: string
@@ -11,9 +11,8 @@ export type TripTemplate = {
   tags: string[]
   duration_days_min: number
   duration_days_max: number
-  popularity_score: number
   image_seed: string
-  ai_generated: boolean
+  is_international: boolean
 }
 
 export default function TemplateCard({ template, distanceKm }: { template: TripTemplate; distanceKm: number | null }) {
@@ -23,15 +22,14 @@ export default function TemplateCard({ template, distanceKm }: { template: TripT
         className="relative h-36 bg-cover bg-center"
         style={{ backgroundImage: `url(https://picsum.photos/seed/${template.image_seed}/400/240)` }}
       >
-        {template.ai_generated ? (
-          <span className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-purple-500/90 px-2.5 py-1 text-xs font-medium text-white">
-            <Sparkles className="h-3.5 w-3.5" /> AI-suggested
+        <span className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-purple-500/90 px-2.5 py-1 text-xs font-medium text-white">
+          <Sparkles className="h-3.5 w-3.5" /> AI-suggested
+        </span>
+        {template.is_international && (
+          <span className="absolute left-3 top-3 flex items-center gap-1 rounded-full bg-blue-600/90 px-2.5 py-1 text-xs font-medium text-white">
+            <Globe2 className="h-3.5 w-3.5" /> International
           </span>
-        ) : template.popularity_score >= 80 ? (
-          <span className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-orange-500/90 px-2.5 py-1 text-xs font-medium text-white">
-            <Flame className="h-3.5 w-3.5" /> Popular
-          </span>
-        ) : null}
+        )}
       </div>
       <div className="p-4">
         <p className="font-medium text-gray-900">{template.title}</p>
@@ -52,7 +50,7 @@ export default function TemplateCard({ template, distanceKm }: { template: TripT
               ? `${template.duration_days_min} day${template.duration_days_min === 1 ? '' : 's'}`
               : `${template.duration_days_min}–${template.duration_days_max} days`}
           </span>
-          {distanceKm !== null && <span>{Math.round(distanceKm)} km away</span>}
+          {distanceKm !== null && <span>~{Math.round(distanceKm)} km away</span>}
         </div>
         <Link
           href={`/trips/new?template=${template.id}`}
